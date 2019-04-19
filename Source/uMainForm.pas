@@ -685,8 +685,8 @@ var
   tfFile: TextFile;
 begin
 {$I-}
-  if not DirectoryExists(AppSett.sPathLog) then
-    ForceDirectories(AppSett.sPathLog);
+  if not SysUtils.DirectoryExists(AppSett.sPathLog) then
+    SysUtils.ForceDirectories(AppSett.sPathLog);
 {$I+}
   AssignFile(tfFile, sPath);
   // Вот такое волшебное слово,
