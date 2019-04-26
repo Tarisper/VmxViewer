@@ -1,2 +1,2 @@
-# vmxviewer
+# VmxViewer
 VmxViewer Browser
