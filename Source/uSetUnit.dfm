@@ -3,7 +3,7 @@ object SetForm: TSetForm
   Top = 0
   BorderStyle = bsToolWindow
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
-  ClientHeight = 345
+  ClientHeight = 352
   ClientWidth = 339
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +21,7 @@ object SetForm: TSetForm
     Left = 8
     Top = 8
     Width = 321
-    Height = 153
+    Height = 170
     Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
     TabOrder = 0
     object lbl1: TLabel
@@ -40,10 +40,18 @@ object SetForm: TSetForm
     end
     object lbl3: TLabel
       Left = 16
-      Top = 73
+      Top = 65
       Width = 65
       Height = 26
       Caption = #1044#1080#1088#1077#1082#1090#1086#1088#1080#1103' Cookies:'
+      WordWrap = True
+    end
+    object Label1: TLabel
+      Left = 16
+      Top = 124
+      Width = 187
+      Height = 26
+      Caption = #1055#1072#1091#1079#1072' '#1087#1077#1088#1077#1076' '#1087#1086#1087#1099#1090#1082#1086#1081' '#1087#1077#1088#1077#1093#1086#1076#1072' '#1085#1072' '#1075#1083#1072#1074#1085#1091#1102' '#1089#1090#1088#1072#1085#1080#1094#1091' ('#1074' '#1089#1077#1082'.):'
       WordWrap = True
     end
     object edtSrvAddr: TEdit
@@ -81,7 +89,7 @@ object SetForm: TSetForm
     end
     object chkWriteLog: TCheckBox
       Left = 16
-      Top = 111
+      Top = 97
       Width = 79
       Height = 17
       Caption = #1042#1077#1089#1090#1080' '#1083#1086#1075':'
@@ -90,7 +98,7 @@ object SetForm: TSetForm
     end
     object edtLogsDir: TEdit
       Left = 101
-      Top = 109
+      Top = 97
       Width = 172
       Height = 21
       TabOrder = 5
@@ -98,17 +106,27 @@ object SetForm: TSetForm
     end
     object btnLogsDir: TButton
       Left = 279
-      Top = 109
+      Top = 97
       Width = 31
       Height = 21
       Caption = '...'
       TabOrder = 6
       OnClick = btnLogsDirClick
     end
+    object spedPause: TSpinEdit
+      Left = 214
+      Top = 124
+      Width = 96
+      Height = 22
+      MaxValue = 300
+      MinValue = 0
+      TabOrder = 7
+      Value = 0
+    end
   end
   object grp2: TGroupBox
     Left = 8
-    Top = 176
+    Top = 184
     Width = 321
     Height = 129
     Caption = #1042#1085#1077#1096#1085#1080#1081' '#1074#1080#1076
@@ -156,7 +174,7 @@ object SetForm: TSetForm
   end
   object btnOk: TButton
     Left = 48
-    Top = 311
+    Top = 319
     Width = 75
     Height = 25
     Caption = 'OK'
@@ -165,7 +183,7 @@ object SetForm: TSetForm
   end
   object btnSave: TButton
     Left = 136
-    Top = 311
+    Top = 319
     Width = 75
     Height = 25
     Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
@@ -175,7 +193,7 @@ object SetForm: TSetForm
   end
   object btnCancel: TButton
     Left = 222
-    Top = 311
+    Top = 319
     Width = 75
     Height = 25
     Cancel = True
@@ -184,7 +202,7 @@ object SetForm: TSetForm
     OnClick = actCancelExecute
   end
   object dlgOpenDir: TOpenDialog
-    Left = 232
-    Top = 112
+    Left = 272
+    Top = 8
   end
 end

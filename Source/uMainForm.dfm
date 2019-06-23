@@ -155,7 +155,6 @@ object MForm: TMForm
     OnBeforePopup = chrmBrwsrBeforePopup
     OnAfterCreated = chrmBrwsrAfterCreated
     OnBeforeClose = chrmBrwsrBeforeClose
-    OnClose = chrmBrwsrClose
     OnCertificateError = chrmBrwsrCertificateError
     Left = 24
     Top = 40

@@ -180,6 +180,7 @@ begin
       WriteString('Application', 'sWebAPIPath', sWebAPIPath);
       WriteBool('Application', 'bShowCloseButton', bShowCloseButton);
       WriteBool('Application', 'bShowOptionButton', bShowOptionButton);
+      WriteInteger('Application', 'iRefreshUrl', iRefreshUrl);
       UpdateFile;
     end;
   finally
@@ -216,6 +217,7 @@ begin
         bShowCloseButton := ReadBool('Application', 'bShowCloseButton', True);
         bShowOptionButton := ReadBool('Application', 'bShowOptionButton', True);
         sPathLog := Trim(ReadString('Application', 'sPathLog', sPath));
+        iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 30);
         if bLog then
           try
             // DirectoryExists иногда возвращает TRUE, даже если директории нет,

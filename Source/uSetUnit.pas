@@ -7,7 +7,7 @@ uses
   System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
   System.Actions,
-  Vcl.ActnList, Winapi.ShlObj, FileCtrl;
+  Vcl.ActnList, Winapi.ShlObj, FileCtrl, Vcl.Samples.Spin;
 
 type
   TSetForm = class(TForm)
@@ -31,6 +31,8 @@ type
     btnSave: TButton;
     btnCancel: TButton;
     dlgOpenDir: TOpenDialog;
+    Label1: TLabel;
+    spedPause: TSpinEdit;
     procedure actCancelExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkWriteLogClick(Sender: TObject);
@@ -200,6 +202,8 @@ begin
   edtLogsDir.Enabled := chkShowSettBtn.Checked;
   btnLogsDir.Enabled := chkShowSettBtn.Checked;
   btnSave.Enabled := False;
+
+  spedPause.Value := AppSett.iRefreshUrl;
 
   if AppSett.bKiosk then
   begin

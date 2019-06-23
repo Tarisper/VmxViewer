@@ -171,6 +171,7 @@ type
     sSQLPath: string;
     sWebAPIPath: string;
     sDbPath: string;
+    iRefreshUrl: Integer;
     bShowCloseButton: Boolean;
     bShowOptionButton: Boolean;
   end;
@@ -337,10 +338,10 @@ begin
     aHandled := True;
   if TempKeyMsg.CharCode = VK_F5 then
     chrmBrwsr.Reload;
-  {$IFDEF DEBUG}
+{$IFDEF DEBUG}
   if TempKeyMsg.CharCode = VK_F8 then
     btnGo1.Click;
-  {$ENDIF}
+{$ENDIF}
   if (TempKeyMsg.CharCode = VK_F6) then
     chrmBrwsr.browser.ReloadIgnoreCache;
   AddToLog('Нажата клавиша = ' + IntToStr(TempKeyMsg.CharCode));
@@ -493,10 +494,10 @@ begin
   end;
 end;
 
-//------------------------------------------------------------------------------
-//  Обработка ошибок работы браузера с сервером
-//  Коды ошибок идут со знаком "-".
-//------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------
+// Обработка ошибок работы браузера с сервером
+// Коды ошибок идут со знаком "-".
+// ------------------------------------------------------------------------------
 procedure TMForm.chrmBrwsrLoadError(Sender: TObject; const browser: ICefBrowser;
   const frame: ICefFrame; errorCode: Integer;
   const errorText, failedUrl: ustring);
@@ -506,11 +507,14 @@ begin
   case errorCode of
     // СROME_ERROR_101: chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_101);
     CHROME_ERROR_105:
-      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_105);
+      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_105 + '?url=' +
+        AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
     CHROME_ERROR_106:
-      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_106);
+      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_106 + '?url=' +
+        AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
     CHROME_ERROR_118:
-      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118);
+      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
+        AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
   end;
   bAddr := True;
 end;
@@ -645,7 +649,7 @@ begin
     with Self do
     begin
       BorderStyle := bsNone;
-      //FormStyle := fsStayOnTop;
+      // FormStyle := fsStayOnTop;
       Left := 0;
       Top := 0;
       Height := Screen.Height;
