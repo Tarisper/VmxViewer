@@ -659,7 +659,11 @@ begin
   end;
   ApplyIni;
   if length(Trim(ParamStr(1))) <> 0 then
+  begin
+    AddToLog('ѕараметр страницы по умолчанию задач через аргумент командной строки',
+      True, []);
     AppSett.sDefLink := Trim(ParamStr(1));
+  end;
 end;
 
 procedure TMForm.FormResize(Sender: TObject);
@@ -679,7 +683,7 @@ end;
 procedure TMForm.FormShow(Sender: TObject);
 begin
   chrmBrwsr.DefaultUrl := AppSett.sDefLink;
-  AddToLog('—траница по умолчанию задана = ');
+  AddToLog('—траница по умолчанию задана = ' + AppSett.sDefLink);
   if not(chrmBrwsr.CreateBrowser(CEFWindowParent1, '')) then
     tmrCrtBrwsr.Enabled := True;
 end;

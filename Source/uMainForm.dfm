@@ -119,8 +119,10 @@ object MForm: TMForm
     end
   end
   object actvtyndctr1: TActivityIndicator
+    AlignWithMargins = True
     Left = 352
     Top = 200
+    Animate = True
     IndicatorColor = aicWhite
   end
   object btn2: TButton
