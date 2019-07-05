@@ -12,6 +12,7 @@ uses
   Dialogs,
   WinAPI.Windows,
   uCEFApplication,
+  uCEFTypes,
   uMainForm in 'uMainForm.pas' {MForm} ,
   uDataModule in 'uDataModule.pas' {DM: TDataModule} ,
   uSplash in 'uSplash.pas' {SpForm} ,
@@ -27,6 +28,7 @@ begin
   GlobalCEFApp.EnableGPU := True;
   GlobalCEFApp.Cache := 'Cache\';
   GlobalCEFApp.UserDataPath := 'UserData\';
+  GlobalCEFApp.AutoplayPolicy := appNoUserGestureRequired;
 
   if GlobalCEFApp.StartMainProcess then
   begin

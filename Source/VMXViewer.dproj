@@ -136,13 +136,12 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.6.9;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName) $(Platform);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.7.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName) $(Platform);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_ExeOutput>..\bin\$(Platform)</DCC_ExeOutput>
         <DCC_UnitSearchPath>..\addDependences\dcef3-master\src\;..\addDependences\CEF4Delphi-master\source\;..\addDependences\Synapse\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Icon_MainIcon>responsive.ico</Icon_MainIcon>
-        <VerInfo_Release>6</VerInfo_Release>
+        <VerInfo_Release>7</VerInfo_Release>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>9</VerInfo_Build>
         <Debugger_RunParams>https:\\google.com</Debugger_RunParams>
     </PropertyGroup>
     <ItemGroup>
@@ -158,11 +157,9 @@
         </DCCReference>
         <DCCReference Include="uSplash.pas">
             <Form>SpForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uSetUnit.pas">
             <Form>SetForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
