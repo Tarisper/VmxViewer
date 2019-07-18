@@ -11,6 +11,7 @@ uses
 {$ENDIF }
   Dialogs,
   WinAPI.Windows,
+  System.SysUtils,
   uCEFApplication,
   uCEFTypes,
   uMainForm in 'uMainForm.pas' {MForm} ,
@@ -18,10 +19,16 @@ uses
   uSplash in 'uSplash.pas' {SpForm} ,
   uSetUnit in 'uSetUnit.pas' {SetForm} ,
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  IniFiles;
 
 {$R *.res}
 {$SETPEFLAGS IMAGE_FILE_LARGE_ADDRESS_AWARE}
+
+var
+  sIniPath_d: string;
+  ini_d: TMemIniFile;
+  bLog_d: Boolean;
 
 begin
   GlobalCEFApp := TCefApplication.Create;
@@ -29,6 +36,26 @@ begin
   GlobalCEFApp.Cache := 'Cache\';
   GlobalCEFApp.UserDataPath := 'UserData\';
   GlobalCEFApp.AutoplayPolicy := appNoUserGestureRequired;
+  if not FileExists(ParamStr(3)) or (Pos('\', ParamStr(3)) = 0) then
+    sIniPath_d := ExtractFilePath(ParamStr(0)) + 'vmxbrowser.ini'
+  else
+    sIniPath_d := ParamStr(3);
+  ini_d := TMemIniFile.Create(sIniPath_d);
+  with ini_d do
+  begin
+    if FileExists(sIniPath_d) then
+    begin
+      if ini_d.ReadBool('Application', 'bLog', False) then
+      begin
+        GlobalCEFApp.LogFile := ExtractFilePath(ParamStr(0)) +
+          'Logs\VmxViewer_Debug.log';
+        GlobalCEFApp.LogSeverity := ini_d.ReadInteger('Application',
+          'iMinLogLevel', 2);;
+        GlobalCEFApp.LogProcessInfo := True;
+      end;
+      ini_d.Free;
+    end;
+  end;
 
   if GlobalCEFApp.StartMainProcess then
   begin

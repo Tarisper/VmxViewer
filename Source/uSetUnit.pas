@@ -114,21 +114,24 @@ end;
 
 procedure TSetForm.btnSaveClick(Sender: TObject);
 begin
-  AppSett.bLog := chkWriteLog.Checked;
-  AppSett.bKiosk := chkKiosk.Checked;
-  AppSett.bNavPanel := chkShowAddrStr.Checked;
-  AppSett.sPathLog := edtLogsDir.Text;
-  AppSett.sDefLink := edtSrvAddr.Text;
-  AppSett.sDefCookiesDir := edtCookiesDir.Text;
-  AppSett.sWebAPIPath := edtAPIAdr.Text;
-  AppSett.bShowCloseButton := chkShohCloseBtn.Checked;
-  AppSett.bShowOptionButton := chkShowSettBtn.Checked;
-  DM.WriteIni(AppSett.sIniPath);
-  btnSave.Enabled := False;
-  MForm.btnShowSett.Visible := AppSett.bShowOptionButton;
-  MForm.btnClose1.Visible := AppSett.bShowCloseButton;
-  if not AppSett.bKiosk then
-    MForm.pnlNavigation1.Visible := AppSett.bNavPanel;
+  with MForm do
+  begin
+    AppSett.bLog := chkWriteLog.Checked;
+    AppSett.bKiosk := chkKiosk.Checked;
+    AppSett.bNavPanel := chkShowAddrStr.Checked;
+    AppSett.sPathLog := edtLogsDir.Text;
+    AppSett.sDefLink := edtSrvAddr.Text;
+    AppSett.sDefCookiesDir := edtCookiesDir.Text;
+    AppSett.sWebAPIPath := edtAPIAdr.Text;
+    AppSett.bShowCloseButton := chkShohCloseBtn.Checked;
+    AppSett.bShowOptionButton := chkShowSettBtn.Checked;
+    DM.WriteIni(AppSett.sIniPath);
+    btnSave.Enabled := False;
+    btnShowSett.Visible := AppSett.bShowOptionButton;
+    btnClose1.Visible := AppSett.bShowCloseButton;
+    if not AppSett.bKiosk then
+      pnlNavigation1.Visible := AppSett.bNavPanel;
+  end;
 end;
 
 procedure TSetForm.chkKioskClick(Sender: TObject);
@@ -188,33 +191,36 @@ end;
 
 procedure TSetForm.FormCreate(Sender: TObject);
 begin
-  edtSrvAddr.Text := AppSett.sDefLink;
-  edtAPIAdr.Text := AppSett.sWebAPIPath;
-  edtCookiesDir.Text := AppSett.sDefCookiesDir;
-  edtLogsDir.Text := AppSett.sPathLog;
-
-  chkWriteLog.Checked := AppSett.bLog;
-  chkKiosk.Checked := AppSett.bKiosk;
-  chkShowAddrStr.Checked := AppSett.bNavPanel;
-  chkShohCloseBtn.Checked := AppSett.bShowCloseButton;
-  chkShowSettBtn.Checked := AppSett.bShowOptionButton;
-
-  edtLogsDir.Enabled := chkShowSettBtn.Checked;
-  btnLogsDir.Enabled := chkShowSettBtn.Checked;
-  btnSave.Enabled := False;
-
-  spedPause.Value := AppSett.iRefreshUrl;
-
-  if AppSett.bKiosk then
+  with MForm do
   begin
-    chkShohCloseBtn.Enabled := False;
-    chkShohCloseBtn.Hint := 'Нельзя выбрать в режиме киоска';
-    chkShohCloseBtn.ShowHint := True;
+    edtSrvAddr.Text := AppSett.sDefLink;
+    edtAPIAdr.Text := AppSett.sWebAPIPath;
+    edtCookiesDir.Text := AppSett.sDefCookiesDir;
+    edtLogsDir.Text := AppSett.sPathLog;
 
-    chkShowAddrStr.Enabled := False;
-    chkShowAddrStr.Checked := False;
-    chkShowAddrStr.Hint := 'Нельзя выбрать в режиме киоска';
-    chkShowAddrStr.ShowHint := True;
+    chkWriteLog.Checked := AppSett.bLog;
+    chkKiosk.Checked := AppSett.bKiosk;
+    chkShowAddrStr.Checked := AppSett.bNavPanel;
+    chkShohCloseBtn.Checked := AppSett.bShowCloseButton;
+    chkShowSettBtn.Checked := AppSett.bShowOptionButton;
+
+    edtLogsDir.Enabled := chkShowSettBtn.Checked;
+    btnLogsDir.Enabled := chkShowSettBtn.Checked;
+    btnSave.Enabled := False;
+
+    spedPause.Value := AppSett.iRefreshUrl;
+
+    if AppSett.bKiosk then
+    begin
+      chkShohCloseBtn.Enabled := False;
+      chkShohCloseBtn.Hint := 'Нельзя выбрать в режиме киоска';
+      chkShohCloseBtn.ShowHint := True;
+
+      chkShowAddrStr.Enabled := False;
+      chkShowAddrStr.Checked := False;
+      chkShowAddrStr.Hint := 'Нельзя выбрать в режиме киоска';
+      chkShowAddrStr.ShowHint := True;
+    end;
   end;
 end;
 

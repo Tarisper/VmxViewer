@@ -62,6 +62,24 @@ uses
   Vcl.Buttons, Vcl.ComCtrls, Vcl.ToolWin, Winapi.ShellAPI, FileCtrl;
 
 type
+  TAppSettings = record
+    sIniPath: string;
+    bKiosk: Boolean;
+    bNavPanel: Boolean;
+    bLog: Boolean;
+    iMinLogLevel: Integer;
+    sPathLog: string;
+    sDefLink: string;
+    sDefCookiesDir: string;
+    sSQLPath: string;
+    sWebAPIPath: string;
+    sDbPath: string;
+    iRefreshUrl: Integer;
+    bShowCloseButton: Boolean;
+    bShowOptionButton: Boolean;
+  end;
+
+type
   TMForm = class(TForm)
     CEFWindowParent1: TCEFWindowParent;
     chrmBrwsr: TChromium;
@@ -155,25 +173,9 @@ type
     procedure HandleKeyDown(const aMsg: TMsg; var aHandled: Boolean);
   public
     { Public declarations }
+    AppSett: TAppSettings;
     procedure AddToLog(sValue: string; bAddDateTime: Boolean = True;
       fsStyle: TFontStyles = []; Color: Integer = 0);
-  end;
-
-type
-  TAppSettings = record
-    sIniPath: string;
-    bKiosk: Boolean;
-    bNavPanel: Boolean;
-    bLog: Boolean;
-    sPathLog: string;
-    sDefLink: string;
-    sDefCookiesDir: string;
-    sSQLPath: string;
-    sWebAPIPath: string;
-    sDbPath: string;
-    iRefreshUrl: Integer;
-    bShowCloseButton: Boolean;
-    bShowOptionButton: Boolean;
   end;
 
 type
@@ -196,7 +198,6 @@ const
 
 var
   MForm: TMForm;
-  AppSett: TAppSettings;
   sAppName: string;
   bAddr: Boolean;
 
@@ -581,10 +582,6 @@ end;
 procedure TMForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   try
-    DM.Destroy;
-    if Assigned(SetForm) then
-      SetForm.Destroy;
-    CanClose := FCanClose;
     if not(FClosing) then
     begin
       FClosing := True;
@@ -730,7 +727,7 @@ end;
 // *****************************************************************************
 procedure TMForm.actCloseExecute(Sender: TObject);
 begin
-  Close;
+  Application.Terminate;
 end;
 
 procedure TMForm.actGoExecute(Sender: TObject);

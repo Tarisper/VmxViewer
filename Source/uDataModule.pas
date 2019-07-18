@@ -42,7 +42,7 @@ uses
 
 procedure TDM.SQLCon(sPath: string);
 begin
-  AppSett.sDbPath := ExtractFileDir(ParamStr(0));
+  MForm.AppSett.sDbPath := ExtractFileDir(ParamStr(0));
   SQLConnection.Params.Add('Database=' + sPath);
   try
     begin
@@ -52,7 +52,7 @@ begin
       SQLConnection.Params.Values['Host'] := 'localhost'; // это не обязательно
       SQLConnection.Params.Values['FailIfMissing'] := 'False';
       SQLConnection.Params.Values['ColumnMetaDataSupported'] := 'False';
-      SQLConnection.Params.Values['Database'] := AppSett.sDbPath;
+      SQLConnection.Params.Values['Database'] := MForm.AppSett.sDbPath;
       SQLConnection.Open;
     end;
   except
@@ -75,7 +75,7 @@ procedure TDM.GetParams;
 var
   slNames: TStringList;
 begin
-  with SQLQuery do
+  with SQLQuery, MForm do
   begin
     SQL.Clear;
     SQL.Add('Select Name, Value from AppSettings order by ID');
@@ -145,7 +145,7 @@ var
   end;
 
 begin
-  with SQLQuery do
+  with SQLQuery, MForm do
   begin
     SetV('bKiosk', BoolToStr(AppSett.bKiosk));
     SetV('bNavPanel', BoolToStr(AppSett.bNavPanel));
@@ -165,9 +165,9 @@ procedure TDM.Write(sPath: string);
 var
   ini: TMemIniFile;
 begin
-  ini := TMemIniFile.Create(AppSett.sIniPath);
+  ini := TMemIniFile.Create(MForm.AppSett.sIniPath);
   try
-    with ini, AppSett do
+    with ini, MForm, AppSett do
     begin
       WriteBool('Application', 'bKiosk', bKiosk);
       WriteBool('Application', 'bNavPanel', bNavPanel);
@@ -200,10 +200,10 @@ var
 begin
   sPath := IncludeTrailingPathDelimiter(sPath);
   try
-    if FileExists(AppSett.sIniPath) then
+    if FileExists(MForm.AppSett.sIniPath) then
     begin
-      ini := TMemIniFile.Create(AppSett.sIniPath);
-      with ini, AppSett do
+      ini := TMemIniFile.Create(MForm.AppSett.sIniPath);
+      with ini, MForm, AppSett do
       begin
         bKiosk := ReadBool('Application', 'bKiosk', True);
         bLog := ReadBool('Application', 'bLog', False);
@@ -218,6 +218,7 @@ begin
         bShowOptionButton := ReadBool('Application', 'bShowOptionButton', True);
         sPathLog := Trim(ReadString('Application', 'sPathLog', sPath));
         iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 30);
+        iMinLogLevel := ReadInteger('Application', 'iMinLogLevel', 2);
         if bLog then
           try
             // DirectoryExists иногда возвращает TRUE, даже если директории нет,
@@ -238,12 +239,12 @@ begin
       ini.Free;
     end;
   finally
-    if not FileExists(AppSett.sIniPath) then
+    if not FileExists(MForm.AppSett.sIniPath) then
     begin
-      AppSett.bKiosk := True;
-      AppSett.sDefLink := 'http://localhost/';
-      AppSett.sPathLog := ExtractFilePath(sAppName) + 'Logs\';
-      AppSett.sDefCookiesDir := ExtractFilePath(sAppName) + 'Cookies\';
+      MForm.AppSett.bKiosk := True;
+      MForm.AppSett.sDefLink := 'http://localhost/';
+      MForm.AppSett.sPathLog := ExtractFilePath(sAppName) + 'Logs\';
+      MForm.AppSett.sDefCookiesDir := ExtractFilePath(sAppName) + 'Cookies\';
       Write(sPath);
     end;
   end;
@@ -261,7 +262,7 @@ begin
     idhtpS.Request.ContentType := 'application/json';
     idhtpS.Request.CharSet := 'utf-8';
     try
-      sResponse := idhtpS.Post(AppSett.sWebAPIPath, JsonToSend);
+      sResponse := idhtpS.Post(MForm.AppSett.sWebAPIPath, JsonToSend);
       Result := sResponse;
     except
       on E: Exception do
