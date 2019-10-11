@@ -217,7 +217,7 @@ begin
         bShowCloseButton := ReadBool('Application', 'bShowCloseButton', True);
         bShowOptionButton := ReadBool('Application', 'bShowOptionButton', True);
         sPathLog := Trim(ReadString('Application', 'sPathLog', sPath));
-        iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 30);
+        iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 1);
         iMinLogLevel := ReadInteger('Application', 'iMinLogLevel', 2);
         if bLog then
           try

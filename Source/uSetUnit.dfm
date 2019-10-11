@@ -122,6 +122,7 @@ object SetForm: TSetForm
       MinValue = 0
       TabOrder = 7
       Value = 0
+      OnChange = spedPauseChange
     end
   end
   object grp2: TGroupBox

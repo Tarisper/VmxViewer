@@ -4,10 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
-  System.Actions,
-  Vcl.ActnList, Winapi.ShlObj, FileCtrl, Vcl.Samples.Spin;
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.StdCtrls, System.Actions, Vcl.ActnList, Winapi.ShlObj, FileCtrl,
+  Vcl.Samples.Spin;
 
 type
   TSetForm = class(TForm)
@@ -48,6 +47,7 @@ type
     procedure btnOkClick(Sender: TObject);
     procedure btnCookiesDirClick(Sender: TObject);
     procedure btnLogsDirClick(Sender: TObject);
+    procedure spedPauseChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -94,8 +94,8 @@ begin
   if btnSave.Enabled then
   begin
     iAsk := MessageBox(SetForm.Handle,
-      'Изменения настроек не сохранены. Сохранить?', 'Внимание',
-      MB_YESNOCANCEL or MB_ICONQUESTION);
+      'Изменения настроек не сохранены. Сохранить?', 'Внимание', MB_YESNOCANCEL
+      or MB_ICONQUESTION);
     case iAsk of
       mrYes:
         begin
@@ -224,4 +224,10 @@ begin
   end;
 end;
 
+procedure TSetForm.spedPauseChange(Sender: TObject);
+begin
+  btnSave.Enabled := True;
+end;
+
 end.
+
