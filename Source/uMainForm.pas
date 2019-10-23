@@ -687,6 +687,9 @@ begin
     end;
   end;
   ApplyIni;
+  chrmBrwsr.browser.MainFrame.Url := '';
+  AddToLog('Загрузка страницы = ' + chrmBrwsr.browser.MainFrame.Url +
+    ' Статус ' + IntToStr(chrmBrwsr.VisibleNavigationEntry.httpStatusCode));
   if length(Trim(ParamStr(1))) <> 0 then
   begin
     AddToLog('Параметр страницы по умолчанию задач через аргумент командной строки',
