@@ -1,9 +1,11 @@
-// ------------------------------------------------------------------------------
+
+  // ------------------------------------------------------------------------------
 // VmxViewer
 // Copyright (c) 2019 ООО "ВИДЕОМАТРИКС"
 // Author: Khaiitov D.D.
 // Date: 15.04.2019
-// ------------------------------------------------------------------------------
+
+  // ------------------------------------------------------------------------------
 // ************************************************************************
 // ***************************** CEF4Delphi *******************************
 // ************************************************************************
@@ -77,6 +79,7 @@ type
     iRefreshUrl: Integer;
     bShowCloseButton: Boolean;
     bShowOptionButton: Boolean;
+    bMSWS12R2: Boolean;
   end;
 
 type
@@ -103,29 +106,29 @@ type
     btnHelp: TToolButton;
     actHelp: TAction;
     btn1: TButton;
+    dlgSaveF: TSaveDialog;
     procedure chrmBrwsrPreKeyEvent(Sender: TObject; const browser: ICefBrowser;
-      const event: PCefKeyEvent; osEvent: PMsg;
-      out isKeyboardShortcut, Result: Boolean);
+      const event: PCefKeyEvent; osEvent: PMsg; out isKeyboardShortcut, Result:
+      Boolean);
     procedure chrmBrwsrKeyEvent(Sender: TObject; const browser: ICefBrowser;
       const event: PCefKeyEvent; osEvent: PMsg; out Result: Boolean);
     procedure FormShow(Sender: TObject);
-    procedure chrmBrwsrAfterCreated(Sender: TObject;
-      const browser: ICefBrowser);
+    procedure chrmBrwsrAfterCreated(Sender: TObject; const browser: ICefBrowser);
     procedure tmrCrtBrwsrTimer(Sender: TObject);
     procedure chrmBrwsrBeforePopup(Sender: TObject; const browser: ICefBrowser;
       const frame: ICefFrame; const targetUrl, targetFrameName: ustring;
-      targetDisposition: TCefWindowOpenDisposition; userGesture: Boolean;
-      const popupFeatures: TCefPopupFeatures; var windowInfo: TCefWindowInfo;
-      var client: ICefClient; var settings: TCefBrowserSettings;
-      var noJavascriptAccess: Boolean; var Result: Boolean);
+      targetDisposition: TCefWindowOpenDisposition; userGesture: Boolean; const
+      popupFeatures: TCefPopupFeatures; var windowInfo: TCefWindowInfo; var
+      client: ICefClient; var settings: TCefBrowserSettings; var
+      noJavascriptAccess: Boolean; var Result: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure chrmBrwsrBeforeClose(Sender: TObject; const browser: ICefBrowser);
-    procedure chrmBrwsrClose(Sender: TObject; const browser: ICefBrowser;
-      out Result: Boolean);
-    procedure chrmBrwsrBeforeContextMenu(Sender: TObject;
-      const browser: ICefBrowser; const frame: ICefFrame;
-      const params: ICefContextMenuParams; const model: ICefMenuModel);
+    procedure chrmBrwsrClose(Sender: TObject; const browser: ICefBrowser; out
+      Result: Boolean);
+    procedure chrmBrwsrBeforeContextMenu(Sender: TObject; const browser:
+      ICefBrowser; const frame: ICefFrame; const params: ICefContextMenuParams;
+      const model: ICefMenuModel);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormResize(Sender: TObject);
     procedure chrmBrwsrLoadEnd(Sender: TObject; const browser: ICefBrowser;
@@ -134,24 +137,23 @@ type
       const frame: ICefFrame; transitionType: Cardinal);
     procedure edtAddressKeyPress(Sender: TObject; var Key: Char);
     procedure chrmBrwsrLoadError(Sender: TObject; const browser: ICefBrowser;
-      const frame: ICefFrame; errorCode: Integer;
-      const errorText, failedUrl: ustring);
-    procedure chrmBrwsrCertificateError(Sender: TObject;
-      const browser: ICefBrowser; certError: Integer; const requestUrl: ustring;
-      const sslInfo: ICefSslInfo; const callback: ICefRequestCallback;
-      out Result: Boolean);
+      const frame: ICefFrame; errorCode: Integer; const errorText, failedUrl:
+      ustring);
+    procedure chrmBrwsrCertificateError(Sender: TObject; const browser:
+      ICefBrowser; certError: Integer; const requestUrl: ustring; const sslInfo:
+      ICefSslInfo; const callback: ICefRequestCallback; out Result: Boolean);
     procedure btn2Click(Sender: TObject);
     procedure actShowSettExecute(Sender: TObject);
     procedure actCloseExecute(Sender: TObject);
     procedure actGoExecute(Sender: TObject);
     procedure actHelpExecute(Sender: TObject);
     procedure btn1Click(Sender: TObject);
-    procedure chrmBrwsrBeforeDownload(Sender: TObject;
-      const browser: ICefBrowser; const downloadItem: ICefDownloadItem;
-      const suggestedName: ustring; const callback: ICefBeforeDownloadCallback);
-    procedure chrmBrwsrDownloadUpdated(Sender: TObject;
-      const browser: ICefBrowser; const downloadItem: ICefDownloadItem;
-      const callback: ICefDownloadItemCallback);
+    procedure chrmBrwsrBeforeDownload(Sender: TObject; const browser:
+      ICefBrowser; const downloadItem: ICefDownloadItem; const suggestedName:
+      ustring; const callback: ICefBeforeDownloadCallback);
+    procedure chrmBrwsrDownloadUpdated(Sender: TObject; const browser:
+      ICefBrowser; const downloadItem: ICefDownloadItem; const callback:
+      ICefDownloadItemCallback);
   private
     { Private declarations }
     procedure WriteToFile(sPath, sText: string);
@@ -166,16 +168,16 @@ type
     procedure WMMoving(var aMessage: TMessage); message WM_MOVING;
     procedure WMEnterMenuLoop(var aMessage: TMessage); message WM_ENTERMENULOOP;
     procedure WMExitMenuLoop(var aMessage: TMessage); message WM_EXITMENULOOP;
-    procedure BrowserCreatedMsg(var aMessage: TMessage);
-      message CEF_AFTERCREATED;
+    procedure BrowserCreatedMsg(var aMessage: TMessage); message
+      CEF_AFTERCREATED;
     procedure BrowserDestroyMsg(var aMessage: TMessage); message CEF_DESTROY;
     procedure HandleKeyUp(const aMsg: TMsg; var aHandled: Boolean);
     procedure HandleKeyDown(const aMsg: TMsg; var aHandled: Boolean);
   public
     { Public declarations }
     AppSett: TAppSettings;
-    procedure AddToLog(sValue: string; bAddDateTime: Boolean = True;
-      fsStyle: TFontStyles = []; Color: Integer = 0);
+    procedure AddToLog(sValue: string; bAddDateTime: Boolean = True; fsStyle:
+      TFontStyles = []; Color: Integer = 0);
   end;
 
 type
@@ -195,6 +197,7 @@ const
   ERR_105 = 'Respond\-105.html';
   ERR_106 = 'Respond\-106.html';
   ERR_118 = 'Respond\-118.html';
+  ERR_000 = 'Respond\-000.html';
 
 var
   MForm: TMForm;
@@ -207,10 +210,10 @@ implementation
 
 uses
   uCEFApplication, uDataModule, uSetUnit;
-
-// *****************************************************************************
+    // *****************************************************************************
 // Получить информацию об исполняемом файле
-// *****************************************************************************
+
+    // *****************************************************************************
 function GetEXEVersionData(const FileName: string): TEXEVersionData;
 type
   PLandCodepage = ^TLandCodepage;
@@ -234,8 +237,8 @@ begin
     if not VerQueryValue(buf, '\VarFileInfo\Translation\', pntr, len) then
       RaiseLastOSError;
 
-    lang := Format('%.4x%.4x', [PLandCodepage(pntr)^.wLanguage,
-      PLandCodepage(pntr)^.wCodePage]);
+    lang := Format('%.4x%.4x', [PLandCodepage(pntr)^.wLanguage, PLandCodepage(pntr)
+      ^.wCodePage]);
 
     if VerQueryValue(buf, PChar('\StringFileInfo\' + lang + '\CompanyName'),
       pntr, len) { and (@len <> nil) } then
@@ -255,8 +258,8 @@ begin
     if VerQueryValue(buf, PChar('\StringFileInfo\' + lang + '\LegalTrademarks'),
       pntr, len) { and (@len <> nil) } then
       Result.LegalTrademarks := PChar(pntr);
-    if VerQueryValue(buf, PChar('\StringFileInfo\' + lang +
-      '\OriginalFileName'), pntr, len) { and (@len <> nil) } then
+    if VerQueryValue(buf, PChar('\StringFileInfo\' + lang + '\OriginalFileName'),
+      pntr, len) { and (@len <> nil) } then
       Result.OriginalFileName := PChar(pntr);
     if VerQueryValue(buf, PChar('\StringFileInfo\' + lang + '\ProductName'),
       pntr, len) { and (@len <> nil) } then
@@ -296,7 +299,7 @@ begin
     else
       btnShowSett.Visible := False;
     if not bShowCloseButton and not bShowOptionButton and not pnlNavigation1.Visible
-    then
+      then
       pnlNavigation.Visible := False;
   end;
 end;
@@ -321,8 +324,8 @@ end;
 procedure TMForm.tmrCrtBrwsrTimer(Sender: TObject);
 begin
   tmrCrtBrwsr.Enabled := False;
-  if not(chrmBrwsr.CreateBrowser(CEFWindowParent1, '')) and
-    not(chrmBrwsr.Initialized) then
+  if not (chrmBrwsr.CreateBrowser(CEFWindowParent1, '')) and not (chrmBrwsr.Initialized)
+    then
     tmrCrtBrwsr.Enabled := True;
 end;
 
@@ -348,70 +351,96 @@ begin
   AddToLog('Нажата клавиша = ' + IntToStr(TempKeyMsg.CharCode));
 end;
 
-procedure TMForm.chrmBrwsrAfterCreated(Sender: TObject;
-  const browser: ICefBrowser);
+procedure TMForm.chrmBrwsrAfterCreated(Sender: TObject; const browser:
+  ICefBrowser);
 begin
   PostMessage(Handle, CEF_AFTERCREATED, 0, 0);
 end;
 
-procedure TMForm.chrmBrwsrBeforeClose(Sender: TObject;
-  const browser: ICefBrowser);
+procedure TMForm.chrmBrwsrBeforeClose(Sender: TObject; const browser:
+  ICefBrowser);
 begin
   FCanClose := True;
   PostMessage(Handle, WM_CLOSE, 0, 0);
 end;
 
-procedure TMForm.chrmBrwsrBeforeContextMenu(Sender: TObject;
-  const browser: ICefBrowser; const frame: ICefFrame;
-  const params: ICefContextMenuParams; const model: ICefMenuModel);
+procedure TMForm.chrmBrwsrBeforeContextMenu(Sender: TObject; const browser:
+  ICefBrowser; const frame: ICefFrame; const params: ICefContextMenuParams;
+  const model: ICefMenuModel);
 begin
   model.Clear;
 end;
 
-procedure TMForm.chrmBrwsrBeforeDownload(Sender: TObject;
-  const browser: ICefBrowser; const downloadItem: ICefDownloadItem;
-  const suggestedName: ustring; const callback: ICefBeforeDownloadCallback);
+procedure TMForm.chrmBrwsrBeforeDownload(Sender: TObject; const browser:
+  ICefBrowser; const downloadItem: ICefDownloadItem; const suggestedName:
+  ustring; const callback: ICefBeforeDownloadCallback);
 var
   TempMyDocuments, TempFullPath, TempName: string;
 begin
-  if not(chrmBrwsr.IsSameBrowser(browser)) or (downloadItem = nil) or
-    not(downloadItem.IsValid) then
+  if not (chrmBrwsr.IsSameBrowser(browser)) or (downloadItem = nil) or not (downloadItem.IsValid)
+    then
     exit;
 
-  if SelectDirectory('Выберите директория для хранения Cookies-файлов', '',
-    TempMyDocuments) then
+  dlgSaveF.Filter := 'Все файлы|*.*';
+    //  dlgSaveF.Filter := 'Excel 97-2003|*.xls|Excel 2007|*.xlsx|Word 97-2003|*.doc|Word 2007|*.docx|ZIP-архив|*zip|Все файлы|*.*';
+  dlgSaveF.FileName := IncludeTrailingPathDelimiter('%USERPROFILE%\Downloads')
+    + suggestedName;
+
+  if not DirectoryExists(IncludeTrailingPathDelimiter('%USERPROFILE%\Downloads'))
+    then
+    dlgSaveF.FileName := IncludeTrailingPathDelimiter('%WINDIR%\Temp') +
+      suggestedName;
+  if AppSett.bMSWS12R2 then
+    Self.SendToBack;
+  if dlgSaveF.Execute then
   begin
-
     if (length(suggestedName) > 0) then
-      TempName := suggestedName
+      TempFullPath := dlgSaveF.FileName
     else
-      TempName := 'DownloadedFile';
+      TempFullPath := 'report';
 
-    if (length(TempMyDocuments) > 0) then
-      TempFullPath := IncludeTrailingPathDelimiter(TempMyDocuments) + TempName
-    else
-      TempFullPath := TempName;
     callback.cont(TempFullPath, False);
   end;
+//var
+//  TempMyDocuments, TempFullPath, TempName: string;
+//begin
+//  if not(chrmBrwsr.IsSameBrowser(browser)) or (downloadItem = nil) or
+//    not(downloadItem.IsValid) then
+//    exit;
+//
+//  if SelectDirectory('Выберите директория для хранения Cookies-файлов', '',
+//    TempMyDocuments) then
+//  begin
+//
+//    if (length(suggestedName) > 0) then
+//      TempName := suggestedName
+//    else
+//      TempName := 'DownloadedFile';
+//
+//    if (length(TempMyDocuments) > 0) then
+
+    //      TempFullPath := IncludeTrailingPathDelimiter(TempMyDocuments) + TempName
+//    else
+//      TempFullPath := TempName;
+//    callback.cont(TempFullPath, False);
+//  end;
 end;
 
-procedure TMForm.chrmBrwsrBeforePopup(Sender: TObject;
-  const browser: ICefBrowser; const frame: ICefFrame;
-  const targetUrl, targetFrameName: ustring;
-  targetDisposition: TCefWindowOpenDisposition; userGesture: Boolean;
-  const popupFeatures: TCefPopupFeatures; var windowInfo: TCefWindowInfo;
-  var client: ICefClient; var settings: TCefBrowserSettings;
-  var noJavascriptAccess: Boolean; var Result: Boolean);
+procedure TMForm.chrmBrwsrBeforePopup(Sender: TObject; const browser:
+  ICefBrowser; const frame: ICefFrame; const targetUrl, targetFrameName:
+  ustring; targetDisposition: TCefWindowOpenDisposition; userGesture: Boolean;
+  const popupFeatures: TCefPopupFeatures; var windowInfo: TCefWindowInfo; var
+  client: ICefClient; var settings: TCefBrowserSettings; var noJavascriptAccess:
+  Boolean; var Result: Boolean);
 begin
   // Для popup-ов
   Result := (targetDisposition in [WOD_NEW_FOREGROUND_TAB,
     WOD_NEW_BACKGROUND_TAB, WOD_NEW_POPUP, WOD_NEW_WINDOW]);
 end;
 
-procedure TMForm.chrmBrwsrCertificateError(Sender: TObject;
-  const browser: ICefBrowser; certError: Integer; const requestUrl: ustring;
-  const sslInfo: ICefSslInfo; const callback: ICefRequestCallback;
-  out Result: Boolean);
+procedure TMForm.chrmBrwsrCertificateError(Sender: TObject; const browser:
+  ICefBrowser; certError: Integer; const requestUrl: ustring; const sslInfo:
+  ICefSslInfo; const callback: ICefRequestCallback; out Result: Boolean);
 begin
   AddToLog('ERROR "' + IntToStr(certError) + '": chrmBrwsrCertificateError ' +
     VarToStr(requestUrl));
@@ -424,16 +453,16 @@ begin
   Result := True;
 end;
 
-procedure TMForm.chrmBrwsrDownloadUpdated(Sender: TObject;
-  const browser: ICefBrowser; const downloadItem: ICefDownloadItem;
-  const callback: ICefDownloadItemCallback);
+procedure TMForm.chrmBrwsrDownloadUpdated(Sender: TObject; const browser:
+  ICefBrowser; const downloadItem: ICefDownloadItem; const callback:
+  ICefDownloadItemCallback);
 begin
-  if not(chrmBrwsr.IsSameBrowser(browser)) then
+  if not (chrmBrwsr.IsSameBrowser(browser)) then
     exit;
 
   if downloadItem.IsComplete then
-    MessageBox(Application.Handle, 'Файл загружен', 'Информация',
-      MB_OK or MB_ICONINFORMATION);
+    MessageBox(Application.Handle, 'Файл загружен', 'Информация', MB_OK or
+      MB_ICONINFORMATION);
 end;
 
 procedure TMForm.BrowserCreatedMsg(var aMessage: TMessage);
@@ -445,19 +474,19 @@ procedure TMForm.BrowserDestroyMsg(var aMessage: TMessage);
 begin
   CEFWindowParent1.Free;
 end;
-
-// ------------------------------------------------------------------------------
+  // ------------------------------------------------------------------------------
 // Работа с SQLite - не доделал
-// ------------------------------------------------------------------------------
+
+  // ------------------------------------------------------------------------------
 procedure TMForm.btn1Click(Sender: TObject);
 begin
   DM.SQLCon('config.db');
   DM.GetParams;
 end;
-
-// ------------------------------------------------------------------------------
+  // ------------------------------------------------------------------------------
 // Отправка JSON по HTTP
-// ------------------------------------------------------------------------------
+
+  // ------------------------------------------------------------------------------
 procedure TMForm.btn2Click(Sender: TObject);
 begin
   DM.SetJson('{userName:"aaa2", pwd:"123456"}');
@@ -494,17 +523,17 @@ begin
     actvtyndctr1.Visible := False;
   end;
 end;
-
-// ------------------------------------------------------------------------------
+  // ------------------------------------------------------------------------------
 // Обработка ошибок работы браузера с сервером
 // Коды ошибок идут со знаком "-".
-// ------------------------------------------------------------------------------
+
+  // ------------------------------------------------------------------------------
 procedure TMForm.chrmBrwsrLoadError(Sender: TObject; const browser: ICefBrowser;
-  const frame: ICefFrame; errorCode: Integer;
-  const errorText, failedUrl: ustring);
+  const frame: ICefFrame; errorCode: Integer; const errorText, failedUrl:
+  ustring);
 begin
-  AddToLog('ERROR "' + IntToStr(errorCode) + '": ' + VarToStr(errorText) + ' ' +
-    VarToStr(failedUrl));
+  AddToLog('ERROR "' + IntToStr(errorCode) + '": ' + VarToStr(errorText) + ' '
+    + VarToStr(failedUrl));
   case errorCode of
     // СROME_ERROR_101: chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_101);
     CHROME_ERROR_105:
@@ -516,6 +545,9 @@ begin
     CHROME_ERROR_118:
       chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
         AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+  else
+    chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
+      AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
   end;
   bAddr := True;
 end;
@@ -530,8 +562,8 @@ begin
   end
   else
     edtAddress.Text := chrmBrwsr.browser.MainFrame.Url;
-  AddToLog('Загрузка страницы = ' + chrmBrwsr.browser.MainFrame.Url + ' Статус '
-    + IntToStr(chrmBrwsr.VisibleNavigationEntry.httpStatusCode));
+  AddToLog('Загрузка страницы = ' + chrmBrwsr.browser.MainFrame.Url +
+    ' Статус ' + IntToStr(chrmBrwsr.VisibleNavigationEntry.httpStatusCode));
   if Assigned(actvtyndctr1) then
   begin
     actvtyndctr1.Visible := True;
@@ -539,9 +571,9 @@ begin
   end;
 end;
 
-procedure TMForm.chrmBrwsrPreKeyEvent(Sender: TObject;
-  const browser: ICefBrowser; const event: PCefKeyEvent; osEvent: PMsg;
-  out isKeyboardShortcut, Result: Boolean);
+procedure TMForm.chrmBrwsrPreKeyEvent(Sender: TObject; const browser:
+  ICefBrowser; const event: PCefKeyEvent; osEvent: PMsg; out isKeyboardShortcut,
+  Result: Boolean);
 begin
   Result := False;
 
@@ -582,7 +614,7 @@ end;
 procedure TMForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   try
-    if not(FClosing) then
+    if not (FClosing) then
     begin
       FClosing := True;
       Visible := False;
@@ -669,11 +701,11 @@ begin
   if Assigned(actvtyndctr1) then
   begin
     if CEFWindowParent1.Height > Round(actvtyndctr1.Height / 2) then
-      actvtyndctr1.Top := Round(CEFWindowParent1.Height / 2) -
-        Round(actvtyndctr1.Height / 2);
+      actvtyndctr1.Top := Round(CEFWindowParent1.Height / 2) - Round(actvtyndctr1.Height
+        / 2);
     if CEFWindowParent1.Width > Round(actvtyndctr1.Width / 2) then
-      actvtyndctr1.Left := Round(CEFWindowParent1.Width / 2) -
-        Round(actvtyndctr1.Width / 2);
+      actvtyndctr1.Left := Round(CEFWindowParent1.Width / 2) - Round(actvtyndctr1.Width
+        / 2);
   end;
 end;
 
@@ -681,7 +713,7 @@ procedure TMForm.FormShow(Sender: TObject);
 begin
   chrmBrwsr.DefaultUrl := AppSett.sDefLink;
   AddToLog('Страница по умолчанию задана = ' + AppSett.sDefLink);
-  if not(chrmBrwsr.CreateBrowser(CEFWindowParent1, '')) then
+  if not (chrmBrwsr.CreateBrowser(CEFWindowParent1, '')) then
     tmrCrtBrwsr.Enabled := True;
 end;
 
@@ -702,10 +734,10 @@ begin
     // А теперь включаем Exception при ошибке ввода-вывода
     // поскольку всё равно ничего поделать не можем
 {$I+}
-    try
-      ReWrite(tfFile);
-    except
-    end;
+  try
+    ReWrite(tfFile);
+  except
+  end;
   try
     WriteLn(tfFile, sText);
     CloseFile(tfFile);
@@ -718,13 +750,13 @@ var
   sPath: string;
 begin
   sPath := IncludeTrailingPathDelimiter(AppSett.sPathLog);
-  WriteToFile(AppSett.sPathLog + FormatDateTime('yyyymmdd', Now) +
-    '.log', sText);
+  WriteToFile(AppSett.sPathLog + FormatDateTime('yyyymmdd', Now) + '.log',
+    sText);
 end;
-
-// *****************************************************************************
+  // *****************************************************************************
 // Запись строки в лог
-// *****************************************************************************
+
+  // *****************************************************************************
 procedure TMForm.actCloseExecute(Sender: TObject);
 begin
   Application.Terminate;
@@ -748,8 +780,8 @@ begin
   SetForm.Show;
 end;
 
-procedure TMForm.AddToLog(sValue: string; bAddDateTime: Boolean = True;
-  fsStyle: TFontStyles = []; Color: Integer = 0);
+procedure TMForm.AddToLog(sValue: string; bAddDateTime: Boolean = True; fsStyle:
+  TFontStyles = []; Color: Integer = 0);
 begin
   if AppSett.bLog then
   begin
@@ -792,3 +824,4 @@ begin
 end;
 
 end.
+

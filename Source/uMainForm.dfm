@@ -1544,4 +1544,9 @@ object MForm: TMForm
     Left = 104
     Top = 136
   end
+  object dlgSaveF: TSaveDialog
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
+    Left = 104
+    Top = 200
+  end
 end
