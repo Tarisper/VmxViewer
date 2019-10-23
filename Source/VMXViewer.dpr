@@ -3,24 +3,25 @@ program VMXViewer;
 {$I cef.inc}
 
 uses
-{$IFDEF DELPHI16_UP}
+  {$IFDEF DELPHI16_UP}
   Vcl.Forms,
-{$ELSE}
+  {$ELSE}
   Forms,
   Windows,
-{$ENDIF }
+  {$ENDIF }
   Dialogs,
   WinAPI.Windows,
   System.SysUtils,
   uCEFApplication,
   uCEFTypes,
-  uMainForm in 'uMainForm.pas' {MForm} ,
-  uDataModule in 'uDataModule.pas' {DM: TDataModule} ,
-  uSplash in 'uSplash.pas' {SpForm} ,
-  uSetUnit in 'uSetUnit.pas' {SetForm} ,
+  uMainForm in 'uMainForm.pas' {MForm},
+  uDataModule in 'uDataModule.pas' {DM: TDataModule},
+  uSplash in 'uSplash.pas' {SpForm},
+  uSetUnit in 'uSetUnit.pas' {SetForm},
   Vcl.Themes,
   Vcl.Styles,
-  IniFiles;
+  IniFiles,
+  uStrinListFiles in 'uStrinListFiles.pas';
 
 {$R *.res}
 {$SETPEFLAGS IMAGE_FILE_LARGE_ADDRESS_AWARE}
@@ -28,7 +29,7 @@ uses
 var
   sIniPath_d: string;
   ini_d: TMemIniFile;
-  bLog_d: Boolean;
+//  bLog_d: Boolean;
 
 begin
   GlobalCEFApp := TCefApplication.Create;
@@ -45,12 +46,12 @@ begin
   begin
     if FileExists(sIniPath_d) then
     begin
-      if ini_d.ReadBool('Application', 'bLog', False) then
+      if ini_d.ReadBool('Application', 'bDLog', False) then
       begin
         GlobalCEFApp.LogFile := ExtractFilePath(ParamStr(0)) +
           'Logs\VmxViewer_Debug.log';
         GlobalCEFApp.LogSeverity := ini_d.ReadInteger('Application',
-          'iMinLogLevel', 2);;
+          'iMinLogLevel', 2);
         GlobalCEFApp.LogProcessInfo := True;
       end;
       ini_d.Free;
@@ -71,7 +72,7 @@ begin
     begin
       TStyleManager.TrySetStyle('Windows10 SlateGray');
       Application.CreateForm(TSpForm, SpForm);
-      SpForm.Show;
+  SpForm.Show;
       Application.ProcessMessages;
       Sleep(1500);
       SpForm.Destroy;
@@ -81,5 +82,5 @@ begin
     end;
   end;
   DestroyGlobalCEFApp;
-
+  GlobalCEFApp.Free;
 end.

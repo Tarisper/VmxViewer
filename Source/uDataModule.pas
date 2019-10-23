@@ -38,7 +38,7 @@ implementation
 {$R *.dfm}
 
 uses
-  synacode;
+  {synacode, }    uStrinListFiles;
 
 procedure TDM.SQLCon(sPath: string);
 begin
@@ -181,6 +181,8 @@ begin
       WriteBool('Application', 'bShowCloseButton', bShowCloseButton);
       WriteBool('Application', 'bShowOptionButton', bShowOptionButton);
       WriteInteger('Application', 'iRefreshUrl', iRefreshUrl);
+      WriteBool('Application', 'bCamGet', bCamGet);
+      WriteInteger('Application', 'iCamGet', iCamGet);
       UpdateFile;
     end;
   finally
@@ -197,6 +199,7 @@ end;
 function TDM.ReadIni(sPath: string): Boolean;
 var
   ini: TMemIniFile;
+  L: TIniStringList;
 begin
   sPath := IncludeTrailingPathDelimiter(sPath);
   try
@@ -217,24 +220,43 @@ begin
         bShowCloseButton := ReadBool('Application', 'bShowCloseButton', True);
         bShowOptionButton := ReadBool('Application', 'bShowOptionButton', True);
         sPathLog := Trim(ReadString('Application', 'sPathLog', sPath));
-        iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 1);
+        iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 2);
+        if iRefreshUrl < 2 then
+          iRefreshUrl := 2;
         iMinLogLevel := ReadInteger('Application', 'iMinLogLevel', 2);
+        bMSWS12R2 := ReadBool('Application', 'bMSWS12R2', False);
+        bCamGet := ReadBool('Application', 'bCamGet', False);
+        iCamGet := ReadInteger('Application', 'iCamGet', 3600000);
+        iTimeOut := ReadInteger('Application', 'iTimeOut', 5000);
+        if Assigned(AppSett.slCams) then
+        begin
+          L := TIniStringList.Create;
+          L.LoadFromIni(MForm.AppSett.sIniPath, 'CamsList');
+          AppSett.slCams.Text := L.Text;
+          L.Free;
+{          L := TIniStringList.Create;
+          L.Add('http://10.81.73.33/axis-cgi/mjpg/video.cgi');
+          L.Add('http://10.81.73.34/axis-cgi/mjpg/video.cgi');
+          L.Add('http://10.81.73.35/axis-cgi/mjpg/video.cgi');
+          L.SaveToIni(MForm.AppSett.sIniPath, 'CamsList');
+          L.Free;}
+        end;
         if bLog then
-          try
-            // DirectoryExists иногда возвращает TRUE, даже если директории нет,
+        try
+          // DirectoryExists иногда возвращает TRUE, даже если директории нет,
             // поэтому пришлось затраить
-            if not DirectoryExists(sPathLog) then
-              if not ForceDirectories(sPathLog) then
-                sPathLog := sIniPath;
-          except
-            on E: Exception do
-            begin
-              MForm.AddToLog(E.Message + ':' + #13#10 +
-                'Ошибка в параметре sPathLog. Невозможно создать директорию c именем "'
-                + sPathLog + '". Лог будет записан в директорию с программой');
-              sPathLog := sPath + 'Logs\';
-            end;
+          if not DirectoryExists(sPathLog) then
+            if not ForceDirectories(sPathLog) then
+              sPathLog := sIniPath;
+        except
+          on E: Exception do
+          begin
+            MForm.AddToLog(E.Message + ':' + #13#10 +
+              'Ошибка в параметре sPathLog. Невозможно создать директорию c именем "'
+              + sPathLog + '". Лог будет записан в директорию с программой');
+            sPathLog := sPath + 'Logs\';
           end;
+        end;
       end;
       ini.Free;
     end;
@@ -274,3 +296,4 @@ begin
 end;
 
 end.
+

@@ -10,7 +10,7 @@ object MForm: TMForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
+  OldCreateOrder = False
   Position = poScreenCenter
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
@@ -1543,5 +1543,17 @@ object MForm: TMForm
       end>
     Left = 104
     Top = 136
+  end
+  object dlgSaveF: TSaveDialog
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
+    Left = 104
+    Top = 200
+  end
+  object tmrCamGet: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = tmrCamGetTimer
+    Left = 24
+    Top = 144
   end
 end

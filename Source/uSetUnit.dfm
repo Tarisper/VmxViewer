@@ -47,7 +47,7 @@ object SetForm: TSetForm
       WordWrap = True
     end
     object Label1: TLabel
-      Left = 16
+      Left = 21
       Top = 124
       Width = 187
       Height = 26

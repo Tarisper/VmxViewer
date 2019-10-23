@@ -111,14 +111,14 @@
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.3.19;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.3.93;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;LastCompiledTime=2019.10.22 12:11:44</VerInfo_Keys>
         <DCC_UnitSearchPath>..\addDependences\dcef3-master\src\;..\addDependences\CEF4Delphi-master\source\;..\addDependences\Synapse\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ExeOutput>..\$(Platform)\$(Config)</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Release>3</VerInfo_Release>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>19</VerInfo_Build>
+        <VerInfo_Build>93</VerInfo_Build>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -136,14 +136,14 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.7.4;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName) $(Platform);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=ООО &quot;ВидеоМатрикс&quot;;FileDescription=$(MSBuildProjectName);FileVersion=1.1.0.8;InternalName=;LegalCopyright=ООО &quot;ВидеоМатрикс&quot;;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName) $(Platform);ProductVersion=1.0.0.0;Comments=;LastCompiledTime=2019.10.22 16:35:25</VerInfo_Keys>
         <DCC_ExeOutput>..\bin\$(Platform)</DCC_ExeOutput>
         <DCC_UnitSearchPath>..\addDependences\dcef3-master\src\;..\addDependences\CEF4Delphi-master\source\;..\addDependences\Synapse\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Icon_MainIcon>responsive.ico</Icon_MainIcon>
-        <VerInfo_Release>7</VerInfo_Release>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_RunParams>https:\\google.com</Debugger_RunParams>
-        <VerInfo_Build>4</VerInfo_Build>
+        <VerInfo_Build>8</VerInfo_Build>
+        <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -162,6 +162,7 @@
         <DCCReference Include="uSetUnit.pas">
             <Form>SetForm</Form>
         </DCCReference>
+        <DCCReference Include="uStrinListFiles.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -189,21 +190,15 @@
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="Win32\Debug\FullScreenBrowser.exe" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="..\..\bin\VMXViewer.exe" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="Win64">
-                        <RemoteName>VMXViewer.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="..\..\bin\VMXViewer.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>VMXViewer.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\bin\VMXViewer.rsm" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="..\bin\Win64\VMXViewer.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win64">
-                        <RemoteName>VMXViewer.rsm</RemoteName>
+                        <RemoteName>VMXViewer.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
