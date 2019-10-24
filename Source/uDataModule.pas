@@ -38,7 +38,7 @@ implementation
 {$R *.dfm}
 
 uses
-  synacode;
+  {synacode}uStrinListFiles;
 
 procedure TDM.SQLCon(sPath: string);
 begin
@@ -197,6 +197,7 @@ end;
 function TDM.ReadIni(sPath: string): Boolean;
 var
   ini: TMemIniFile;
+  L: TIniStringList;
 begin
   sPath := IncludeTrailingPathDelimiter(sPath);
   try
@@ -219,6 +220,14 @@ begin
         sPathLog := Trim(ReadString('Application', 'sPathLog', sPath));
         iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 1);
         iMinLogLevel := ReadInteger('Application', 'iMinLogLevel', 2);
+        iTimeOut := ReadInteger('Application', 'iTimeOut', 3000);
+        if Assigned(AppSett.slCams) then
+        begin
+          L := TIniStringList.Create;
+          L.LoadFromIni(MForm.AppSett.sIniPath, 'CamsList');
+          AppSett.slCams.Text := L.Text;
+          L.Free;
+        end;
         if bLog then
           try
             // DirectoryExists иногда возвращает TRUE, даже если директории нет,

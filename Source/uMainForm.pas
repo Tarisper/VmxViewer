@@ -80,6 +80,8 @@ type
     bShowCloseButton: Boolean;
     bShowOptionButton: Boolean;
     bMSWS12R2: Boolean;
+    slCams: TStringList;
+    iTimeOut: Integer;
   end;
 
 type
@@ -107,6 +109,8 @@ type
     actHelp: TAction;
     btn1: TButton;
     dlgSaveF: TSaveDialog;
+    pnlCamResp: TPanel;
+    lbl1: TLabel;
     procedure chrmBrwsrPreKeyEvent(Sender: TObject; const browser: ICefBrowser;
       const event: PCefKeyEvent; osEvent: PMsg; out isKeyboardShortcut, Result:
       Boolean);
@@ -187,6 +191,16 @@ type
       PrivateBuild, SpecialBuild: string;
   end;
 
+  TAutCamsThread = class(TThread)
+    sLink, sText: string;
+  private
+    { Private declarations }
+    procedure AutCam;
+    procedure HidePnl;
+  protected
+    procedure Execute; override;
+  end;
+
 const
   CHROME_ERROR_101 = -101;
   CHROME_ERROR_105 = -105;
@@ -203,6 +217,9 @@ var
   MForm: TMForm;
   sAppName: string;
   bAddr: Boolean;
+  AutCamsThread: TAutCamsThread;
+  bAllAut, bStartingError: Boolean;
+  sRealDefLink: string;
 
 implementation
 
@@ -214,6 +231,7 @@ uses
 // Получить информацию об исполняемом файле
 
     // *****************************************************************************
+
 function GetEXEVersionData(const FileName: string): TEXEVersionData;
 type
   PLandCodepage = ^TLandCodepage;
@@ -279,6 +297,53 @@ begin
   finally
     FreeMem(buf);
   end;
+end;
+
+procedure TAutCamsThread.AutCam;
+begin
+  MForm.AddToLog(sText + sLink, True);
+  MForm.chrmBrwsr.LoadURL(sLink);
+end;
+
+procedure TAutCamsThread.HidePnl;
+begin
+  MForm.pnlCamResp.Visible := False;
+end;
+
+procedure TAutCamsThread.Execute;
+var
+  i: Integer;
+begin
+  i := 0;
+  while not Self.Terminated do
+  begin
+    Inc(i);
+    with MForm.AppSett do
+    begin
+      Sleep(iTimeOut);
+      if slCams.Count >= 1 then
+      begin
+        if i < slCams.Count then
+        begin
+          sText := 'Авторизация: ';
+          sLink := slCams.Strings[i];
+          Synchronize(AutCam);
+        end
+        else
+          Self.Terminate;
+      end
+      else
+        Self.Terminate;
+    end;
+  end;
+  Sleep(MForm.AppSett.iTimeOut);
+  MForm.chrmBrwsr.StopLoad;
+  sText := 'Открытие после авторизации: ';
+  MForm.AppSett.sDefLink := sRealDefLink;
+  sLink := MForm.AppSett.sDefLink;
+  Synchronize(AutCam);
+  bAllAut := True;
+  Synchronize(HidePnl);
 end;
 
 procedure TMForm.ApplyIni;
@@ -478,6 +543,7 @@ end;
 // Работа с SQLite - не доделал
 
   // ------------------------------------------------------------------------------
+
 procedure TMForm.btn1Click(Sender: TObject);
 begin
   DM.SQLCon('config.db');
@@ -487,6 +553,7 @@ end;
 // Отправка JSON по HTTP
 
   // ------------------------------------------------------------------------------
+
 procedure TMForm.btn2Click(Sender: TObject);
 begin
   DM.SetJson('{userName:"aaa2", pwd:"123456"}');
@@ -528,27 +595,34 @@ end;
 // Коды ошибок идут со знаком "-".
 
   // ------------------------------------------------------------------------------
+
 procedure TMForm.chrmBrwsrLoadError(Sender: TObject; const browser: ICefBrowser;
   const frame: ICefFrame; errorCode: Integer; const errorText, failedUrl:
   ustring);
 begin
   AddToLog('ERROR "' + IntToStr(errorCode) + '": ' + VarToStr(errorText) + ' '
     + VarToStr(failedUrl));
-  case errorCode of
-    // СROME_ERROR_101: chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_101);
-    CHROME_ERROR_105:
-      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_105 + '?url=' +
-        AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
-    CHROME_ERROR_106:
-      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_106 + '?url=' +
-        AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
-    CHROME_ERROR_118:
-      chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
-        AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
-  else
-    chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
-      AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
-  end;
+  if bAllAut then
+    if not bStartingError then
+      bStartingError := True
+    else
+    begin
+      case errorCode of
+        // СROME_ERROR_101: chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_101);
+        CHROME_ERROR_105:
+          chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_105 + '?url=' +
+            AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+        CHROME_ERROR_106:
+          chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_106 + '?url=' +
+            AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+        CHROME_ERROR_118:
+          chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
+            AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+      else
+        chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
+          AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+      end;
+    end;
   bAddr := True;
 end;
 
@@ -605,6 +679,10 @@ begin
     ShowWindow(HTaskbar, SW_SHOW);
     if Assigned(actvtyndctr1) then
       actvtyndctr1.Free;
+    if Assigned(AppSett.slCams) then
+      AppSett.slCams.Free;
+    if Assigned(AutCamsThread) then
+      AutCamsThread.Free;
   except
 
   end;
@@ -632,6 +710,7 @@ var
   ProcessID, ThreadID: Cardinal;
   EXEVersionData: TEXEVersionData;
 begin
+  AppSett.slCams := TStringList.Create;
   sAppName := ParamStr(0);
   if not FileExists(ParamStr(3)) or (Pos('\', ParamStr(3)) = 0) then
     AppSett.sIniPath := ExtractFilePath(sAppName) + 'vmxbrowser.ini'
@@ -687,14 +766,27 @@ begin
     end;
   end;
   ApplyIni;
-  chrmBrwsr.browser.MainFrame.Url := '';
-  AddToLog('Загрузка страницы = ' + chrmBrwsr.browser.MainFrame.Url +
-    ' Статус ' + IntToStr(chrmBrwsr.VisibleNavigationEntry.httpStatusCode));
+  bAllAut := False;
+  bStartingError := False;
+  sRealDefLink := AppSett.sDefLink;
+  if AppSett.slCams.Count > 0 then
+  begin
+    AppSett.sDefLink := AppSett.slCams.Strings[0];
+    pnlCamResp.Top := Round(CEFWindowParent1.Height / 2 - pnlCamResp.Height / 2);
+    pnlCamResp.Left := Round(CEFWindowParent1.Width / 2 - pnlCamResp.Width / 2);
+    pnlCamResp.Visible := True;
+  end;
   if length(Trim(ParamStr(1))) <> 0 then
   begin
-    AddToLog('Параметр страницы по умолчанию задач через аргумент командной строки',
+    AddToLog('Параметр страницы по умолчанию задан через аргумент командной строки',
       True, []);
     AppSett.sDefLink := Trim(ParamStr(1));
+  end;
+
+  if not Assigned(AutCamsThread) and (AppSett.slCams.Count > 0) then
+  begin
+    AutCamsThread := TAutCamsThread.Create(False);
+    AutCamsThread.Priority := tpNormal;
   end;
 end;
 
@@ -760,6 +852,7 @@ end;
 // Запись строки в лог
 
   // *****************************************************************************
+
 procedure TMForm.actCloseExecute(Sender: TObject);
 begin
   Application.Terminate;

@@ -3,24 +3,25 @@ program VMXViewer;
 {$I cef.inc}
 
 uses
-{$IFDEF DELPHI16_UP}
+  {$IFDEF DELPHI16_UP}
   Vcl.Forms,
-{$ELSE}
+  {$ELSE}
   Forms,
   Windows,
-{$ENDIF }
+  {$ENDIF }
   Dialogs,
   WinAPI.Windows,
   System.SysUtils,
   uCEFApplication,
   uCEFTypes,
-  uMainForm in 'uMainForm.pas' {MForm} ,
-  uDataModule in 'uDataModule.pas' {DM: TDataModule} ,
-  uSplash in 'uSplash.pas' {SpForm} ,
-  uSetUnit in 'uSetUnit.pas' {SetForm} ,
+  uMainForm in 'uMainForm.pas' {MForm},
+  uDataModule in 'uDataModule.pas' {DM: TDataModule},
+  uSplash in 'uSplash.pas' {SpForm},
+  uSetUnit in 'uSetUnit.pas' {SetForm},
   Vcl.Themes,
   Vcl.Styles,
-  IniFiles;
+  IniFiles,
+  uStrinListFiles in 'uStrinListFiles.pas';
 
 {$R *.res}
 {$SETPEFLAGS IMAGE_FILE_LARGE_ADDRESS_AWARE}
@@ -71,7 +72,7 @@ begin
     begin
       TStyleManager.TrySetStyle('Windows10 SlateGray');
       Application.CreateForm(TSpForm, SpForm);
-      SpForm.Show;
+  SpForm.Show;
       Application.ProcessMessages;
       Sleep(1500);
       SpForm.Destroy;

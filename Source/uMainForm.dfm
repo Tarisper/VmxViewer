@@ -26,6 +26,7 @@ object MForm: TMForm
     Height = 738
     Align = alClient
     TabOrder = 1
+    ExplicitTop = 33
   end
   object pnlNavigation: TPanel
     Left = 0
@@ -126,8 +127,8 @@ object MForm: TMForm
     IndicatorColor = aicWhite
   end
   object btn2: TButton
-    Left = 368
-    Top = 45
+    Left = 152
+    Top = 53
     Width = 75
     Height = 25
     Caption = 'btn2'
@@ -136,14 +137,52 @@ object MForm: TMForm
     OnClick = btn2Click
   end
   object btn1: TButton
-    Left = 368
-    Top = 88
+    Left = 152
+    Top = 96
     Width = 75
     Height = 25
     Caption = 'btn1'
     TabOrder = 4
     Visible = False
     OnClick = btn1Click
+  end
+  object pnlCamResp: TPanel
+    Left = 328
+    Top = 312
+    Width = 353
+    Height = 57
+    BevelOuter = bvNone
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -12
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 5
+    Visible = False
+    object lbl1: TLabel
+      AlignWithMargins = True
+      Left = 5
+      Top = 5
+      Width = 343
+      Height = 47
+      Margins.Left = 5
+      Margins.Top = 5
+      Margins.Right = 5
+      Margins.Bottom = 5
+      Align = alClient
+      Alignment = taCenter
+      BiDiMode = bdRightToLeftNoAlign
+      Caption = 
+        #1048#1076#1105#1090' '#1086#1087#1088#1086#1089' '#1076#1086#1089#1090#1091#1087#1085#1099#1093' '#1082#1072#1084#1077#1088'. '#1055#1086#1089#1083#1077' '#1079#1072#1074#1077#1088#1096#1077#1085#1080#1103' '#1086#1087#1077#1088#1072#1094#1080#1080' '#1087#1088#1086#1080#1079#1086#1081#1076#1105#1090 +
+        ' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1093#1086#1076' '#1074' '#1086#1082#1085#1086' '#1063#1069
+      ParentBiDiMode = False
+      Transparent = True
+      Layout = tlCenter
+      WordWrap = True
+      ExplicitWidth = 318
+      ExplicitHeight = 42
+    end
   end
   object chrmBrwsr: TChromium
     OnLoadStart = chrmBrwsrLoadStart
