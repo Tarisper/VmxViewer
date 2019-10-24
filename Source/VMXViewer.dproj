@@ -136,14 +136,14 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.7.22;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName) $(Platform);ProductVersion=1.0.0.0;Comments=;LastCompiledTime=2019.10.23 16:57:04</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.7.25;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName) $(Platform);ProductVersion=1.0.0.0;Comments=;LastCompiledTime=2019.10.24 09:10:58</VerInfo_Keys>
         <DCC_ExeOutput>..\bin\$(Platform)</DCC_ExeOutput>
         <DCC_UnitSearchPath>..\addDependences\dcef3-master\src\;..\addDependences\CEF4Delphi-master\source\;..\addDependences\Synapse\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Icon_MainIcon>responsive.ico</Icon_MainIcon>
         <VerInfo_Release>7</VerInfo_Release>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_RunParams>https:\\google.com</Debugger_RunParams>
-        <VerInfo_Build>22</VerInfo_Build>
+        <VerInfo_Build>25</VerInfo_Build>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

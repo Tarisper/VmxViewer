@@ -618,6 +618,8 @@ begin
         CHROME_ERROR_118:
           chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
             AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+        -3:
+          chrmBrwsr.LoadURL(AppSett.sDefLink);
       else
         chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
           AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));

@@ -221,6 +221,7 @@ begin
         iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 1);
         iMinLogLevel := ReadInteger('Application', 'iMinLogLevel', 2);
         iTimeOut := ReadInteger('Application', 'iTimeOut', 3000);
+        bMSWS12R2 := ReadBool('Application', 'bMSWS12R2', True);
         if Assigned(AppSett.slCams) then
         begin
           L := TIniStringList.Create;

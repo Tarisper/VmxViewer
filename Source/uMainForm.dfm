@@ -26,7 +26,6 @@ object MForm: TMForm
     Height = 738
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 33
   end
   object pnlNavigation: TPanel
     Left = 0
