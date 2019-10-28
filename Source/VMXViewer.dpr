@@ -21,7 +21,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   IniFiles,
-  uStrinListFiles in 'uStrinListFiles.pas';
+  uStrinListFiles in 'uStrinListFiles.pas',
+  uMail in 'uMail.pas' {MailForm};
 
 {$R *.res}
 {$SETPEFLAGS IMAGE_FILE_LARGE_ADDRESS_AWARE}

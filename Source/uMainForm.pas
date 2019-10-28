@@ -82,6 +82,13 @@ type
     bMSWS12R2: Boolean;
     slCams: TStringList;
     iTimeOut: Integer;
+    sFrom, sPass, sTo, sSMTP: string;
+    iPort: Integer;
+    bSend: Boolean;
+  end;
+
+  TErrCount = record
+    Count118, Count2: Integer;
   end;
 
 type
@@ -220,13 +227,14 @@ var
   AutCamsThread: TAutCamsThread;
   bAllAut, bStartingError: Boolean;
   sRealDefLink: string;
+  ErrCount: TErrCount;
 
 implementation
 
 {$R *.dfm}
 
 uses
-  uCEFApplication, uDataModule, uSetUnit;
+  uCEFApplication, uDataModule, uSetUnit, uMail;
     // *****************************************************************************
 // Получить информацию об исполняемом файле
 
@@ -447,7 +455,7 @@ begin
     exit;
 
   dlgSaveF.Filter := 'Все файлы|*.*';
-    //  dlgSaveF.Filter := 'Excel 97-2003|*.xls|Excel 2007|*.xlsx|Word 97-2003|*.doc|Word 2007|*.docx|ZIP-архив|*zip|Все файлы|*.*';
+    // dlgSaveF.Filter := 'Excel 97-2003|*.xls|Excel 2007|*.xlsx|Word 97-2003|*.doc|Word 2007|*.docx|ZIP-архив|*zip|Все файлы|*.*';
   dlgSaveF.FileName := IncludeTrailingPathDelimiter('%USERPROFILE%\Downloads')
     + suggestedName;
 
@@ -466,29 +474,29 @@ begin
 
     callback.cont(TempFullPath, False);
   end;
-//var
-//  TempMyDocuments, TempFullPath, TempName: string;
-//begin
-//  if not(chrmBrwsr.IsSameBrowser(browser)) or (downloadItem = nil) or
-//    not(downloadItem.IsValid) then
-//    exit;
-//
-//  if SelectDirectory('Выберите директория для хранения Cookies-файлов', '',
-//    TempMyDocuments) then
-//  begin
-//
-//    if (length(suggestedName) > 0) then
-//      TempName := suggestedName
-//    else
-//      TempName := 'DownloadedFile';
-//
-//    if (length(TempMyDocuments) > 0) then
+  // var
+  // TempMyDocuments, TempFullPath, TempName: string;
+  // begin
+  // if not(chrmBrwsr.IsSameBrowser(browser)) or (downloadItem = nil) or
+  // not(downloadItem.IsValid) then
+  // exit;
+  //
+  // if SelectDirectory('Выберите директория для хранения Cookies-файлов', '',
+  // TempMyDocuments) then
+  // begin
+  //
+  // if (length(suggestedName) > 0) then
+  // TempName := suggestedName
+  // else
+  // TempName := 'DownloadedFile';
+  //
+  // if (length(TempMyDocuments) > 0) then
 
-    //      TempFullPath := IncludeTrailingPathDelimiter(TempMyDocuments) + TempName
-//    else
-//      TempFullPath := TempName;
-//    callback.cont(TempFullPath, False);
-//  end;
+  // TempFullPath := IncludeTrailingPathDelimiter(TempMyDocuments) + TempName
+  // else
+  // TempFullPath := TempName;
+  // callback.cont(TempFullPath, False);
+  // end;
 end;
 
 procedure TMForm.chrmBrwsrBeforePopup(Sender: TObject; const browser:
@@ -616,13 +624,26 @@ begin
           chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_106 + '?url=' +
             AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
         CHROME_ERROR_118:
-          chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
-            AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+          begin
+            chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url='
+              + AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+            Inc(ErrCount.Count118);
+            ErrCount.Count2 := 0;
+          end;
         -3:
           chrmBrwsr.LoadURL(AppSett.sDefLink);
       else
         chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
           AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+        Inc(ErrCount.Count2);
+        ErrCount.Count118 := 0;
+      end;
+      if (ErrCount.Count2 > 2) or (ErrCount.Count118 > 2) then
+      begin
+        Application.CreateForm(TMailForm, MailForm);
+        MailForm.Button2.Click;
+        ErrCount.Count2 := 0;
+        ErrCount.Count118 := 0;
       end;
     end;
   bAddr := True;
@@ -790,6 +811,8 @@ begin
     AutCamsThread := TAutCamsThread.Create(False);
     AutCamsThread.Priority := tpNormal;
   end;
+  ErrCount.Count2 := 0;
+  ErrCount.Count118 := 0;
 end;
 
 procedure TMForm.FormResize(Sender: TObject);

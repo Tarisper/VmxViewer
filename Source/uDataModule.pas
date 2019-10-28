@@ -222,6 +222,14 @@ begin
         iMinLogLevel := ReadInteger('Application', 'iMinLogLevel', 2);
         iTimeOut := ReadInteger('Application', 'iTimeOut', 3000);
         bMSWS12R2 := ReadBool('Application', 'bMSWS12R2', True);
+
+        bSend := ReadBool('Mail', 'bSend', False);
+        sFrom := ReadString('Mail', 'sFrom', 'a103-blackscreen1@vsk.sibur.ru');
+        sTo := ReadString('Mail', 'sTo', '');
+        sPass := ReadString('Mail', 'sPass', '40uzKdgA');
+        sSMTP := ReadString('Mail', 'sSMTP', 'smtp.sibur.local');
+        iPort := ReadInteger('Mail', 'iPort', 25);
+
         if Assigned(AppSett.slCams) then
         begin
           L := TIniStringList.Create;
