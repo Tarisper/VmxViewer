@@ -184,4 +184,10 @@ object MailForm: TMailForm
     Left = 192
     Top = 24
   end
+  object IdIPWatch1: TIdIPWatch
+    Active = False
+    HistoryFilename = 'iphist.dat'
+    Left = 192
+    Top = 104
+  end
 end

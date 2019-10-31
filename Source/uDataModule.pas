@@ -229,7 +229,8 @@ begin
         sPass := ReadString('Mail', 'sPass', '40uzKdgA');
         sSMTP := ReadString('Mail', 'sSMTP', 'smtp.sibur.local');
         iPort := ReadInteger('Mail', 'iPort', 25);
-
+        iMTimeOut := ReadInteger('Mail', 'iMTimeOut', 300000);
+        iCamsCheckDelay := ReadInteger('Application', 'iCamsCheckDelay', 60);
         if Assigned(AppSett.slCams) then
         begin
           L := TIniStringList.Create;

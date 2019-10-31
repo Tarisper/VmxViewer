@@ -1587,4 +1587,11 @@ object MForm: TMForm
     Left = 104
     Top = 200
   end
+  object tmrMail: TTimer
+    Enabled = False
+    Interval = 300000
+    OnTimer = tmrMailTimer
+    Left = 24
+    Top = 144
+  end
 end
