@@ -192,7 +192,7 @@ begin
   Inc(MForm.ErrCount.Count118);
   Inc(MForm.ErrCount.Count2);
   sText.Free;
-  Close;
+  Destroy;
 end;
 
 procedure TMailForm.FormCreate(Sender: TObject);

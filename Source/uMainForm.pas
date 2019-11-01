@@ -690,7 +690,7 @@ begin
         CamsCheck;
       end;
     end;
-    if (ErrCount.Count2 = 3) or (ErrCount.Count118 = 3) then
+    if (ErrCount.Count2 = 2) or (ErrCount.Count118 = 2) then
     begin
       tmrMail.Enabled := False;
       Application.CreateForm(TMailForm, MailForm);
