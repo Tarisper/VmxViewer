@@ -705,6 +705,9 @@ end;
 
 procedure TMForm.chrmBrwsrLoadStart(Sender: TObject; const browser: ICefBrowser;
   const frame: ICefFrame; transitionType: Cardinal);
+var
+  myYear, myMonth, myDay: Word;
+  myHour, myMin, mySec, myMilli: Word;
 begin
   if Assigned(actvtyndctr1) then
   begin
@@ -722,7 +725,20 @@ begin
     ' Статус ' + IntToStr(chrmBrwsr.VisibleNavigationEntry.httpStatusCode));
   if (chrmBrwsr.VisibleNavigationEntry.httpStatusCode = 200) and (chrmBrwsr.browser.MainFrame.Url
     = AppSett.sDefLink) then
-    bCamsIsChecked := False;
+    bCamsIsChecked := False
+  else if chrmBrwsr.VisibleNavigationEntry.httpStatusCode = 503 then
+  begin
+    chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
+      AppSett.sDefLink + '&sec=' + IntToStr(AppSett.iRefreshUrl));
+    Inc(ErrCount.Count2);
+    ErrCount.Count118 := 0;
+    DecodeDateTime(Now - dtCheck, myYear, myMonth, myDay, myHour, myMin, mySec,
+      myMilli);
+    if (myMin > AppSett.iCamsCheckDelay) or not bCamsIsChecked then
+    begin
+      CamsCheck;
+    end;
+  end;
 end;
 
 procedure TMForm.chrmBrwsrPreKeyEvent(Sender: TObject; const browser:
