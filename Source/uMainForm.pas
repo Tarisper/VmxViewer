@@ -121,6 +121,8 @@ type
     pnlCamResp: TPanel;
     lbl1: TLabel;
     tmrMail: TTimer;
+    tmrAut: TTimer;
+    tmrDelTh: TTimer;
     procedure chrmBrwsrPreKeyEvent(Sender: TObject; const browser: ICefBrowser;
       const event: PCefKeyEvent; osEvent: PMsg; out isKeyboardShortcut, Result:
       Boolean);
@@ -169,6 +171,10 @@ type
       ICefBrowser; const downloadItem: ICefDownloadItem; const callback:
       ICefDownloadItemCallback);
     procedure tmrMailTimer(Sender: TObject);
+    procedure tmrAutTimer(Sender: TObject);
+    procedure tmrDelThTimer(Sender: TObject);
+    procedure chrmBrwsrAddressChange(Sender: TObject; const browser:
+      ICefBrowser; const frame: ICefFrame; const url: ustring);
   private
     { Private declarations }
     procedure WriteToFile(sPath, sText: string);
@@ -210,8 +216,11 @@ type
     sLink, sText: string;
   private
     { Private declarations }
+    Aut: Boolean;
     procedure AutCam;
     procedure HidePnl;
+    procedure Tabs;
+    procedure TabsDest;
   protected
     procedure Execute; override;
   end;
@@ -227,6 +236,10 @@ const
   ERR_106 = 'Respond\-106.html';
   ERR_118 = 'Respond\-118.html';
   ERR_000 = 'Respond\-000.html';
+  CEFBROWSER_DESTROYWNDPARENT = WM_APP + $100;
+  CEFBROWSER_DESTROYTAB = WM_APP + $101;
+  CEFBROWSER_INITIALIZED = WM_APP + $102;
+  CEFBROWSER_CHECKTAGGEDTABS = WM_APP + $103;
 
 var
   MForm: TMForm;
@@ -235,18 +248,18 @@ var
   AutCamsThread: TAutCamsThread;
   bAllAut, bStartingError: Boolean;
   sRealDefLink: string;
+  bIsStartHP, bError: Boolean;
 
 implementation
 
 {$R *.dfm}
 
 uses
-  uCEFApplication, uDataModule, uSetUnit, uMail;
-    // *****************************************************************************
-// Получить информацию об исполняемом файле
+  uCEFApplication, uDataModule, uSetUnit, uMail, uTabF, uTForm;
 
-    // *****************************************************************************
-
+//*****************************************************************************
+//  Получить информацию об исполняемом файле
+//*****************************************************************************
 function GetEXEVersionData(const FileName: string): TEXEVersionData;
 type
   PLandCodepage = ^TLandCodepage;
@@ -316,13 +329,14 @@ end;
 
 procedure TMForm.CamsCheck;
 begin
-  AddToLog('Авторизация на камерах');
-  bAllAut := False;
   chrmBrwsr.StopLoad;
   sRealDefLink := AppSett.sDefLink;
   if AppSett.slCams.Count > 0 then
   begin
-    AppSett.sDefLink := AppSett.slCams.Strings[0];
+    bAllAut := False;
+    AddToLog('Авторизация на камерах');
+    //AppSett.sDefLink := AppSett.slCams.Strings[0];
+    AppSett.sDefLink := ExtractFilePath(ParamStr(0)) + 'Respond\start.html';
     pnlCamResp.Top := Round(CEFWindowParent1.Height / 2 - pnlCamResp.Height / 2);
     pnlCamResp.Left := Round(CEFWindowParent1.Width / 2 - pnlCamResp.Width / 2);
     pnlCamResp.Visible := True;
@@ -341,19 +355,41 @@ end;
 procedure TAutCamsThread.AutCam;
 begin
   MForm.AddToLog(sText + sLink, True);
-  MForm.chrmBrwsr.LoadURL(sLink);
+  if Aut then
+    TabForm.AddLink(sLink)
+  else if not bIsStartHP or bError then
+    MForm.chrmBrwsr.LoadURL(sLink);
 end;
 
 procedure TAutCamsThread.HidePnl;
 begin
   MForm.pnlCamResp.Visible := False;
+  MForm.tmrAut.Interval := MForm.AppSett.iCamsCheckDelay * 60 * 1000;
+  MForm.tmrAut.Enabled := True;
+  MForm.tmrDelTh.Enabled := True;
+end;
+
+procedure TAutCamsThread.Tabs;
+begin
+  Application.CreateForm(TTabForm, TabForm);
+//  {$IFDEF DEBUG}
+  TabForm.Show;
+  TabForm.Hide;
+//  {$ENDIF}
+end;
+
+procedure TAutCamsThread.TabsDest;
+begin
+  if Assigned(TabForm) then
+    FreeAndNil(TabForm);
 end;
 
 procedure TAutCamsThread.Execute;
 var
   i: Integer;
 begin
-  i := 0;
+  i := -1;
+  Synchronize(Tabs);
   while not Self.Terminated do
   begin
     Inc(i);
@@ -366,6 +402,7 @@ begin
         begin
           sText := 'Авторизация: ';
           sLink := slCams.Strings[i];
+          Aut := True;
           Synchronize(AutCam);
         end
         else
@@ -377,11 +414,17 @@ begin
   end;
   Sleep(MForm.AppSett.iTimeOut);
   MForm.chrmBrwsr.StopLoad;
-  sText := 'Открытие после авторизации: ';
-  MForm.AppSett.sDefLink := sRealDefLink;
-  sLink := MForm.AppSett.sDefLink;
+  if not bIsStartHP or bError then
+  begin
+    sText := 'Открытие после авторизации: ';
+    MForm.AppSett.sDefLink := sRealDefLink;
+    sLink := MForm.AppSett.sDefLink;
+  end;
+  Aut := False;
   Synchronize(AutCam);
+  bIsStartHP := True;
   bAllAut := True;
+  Synchronize(TabsDest);
   Synchronize(HidePnl);
 end;
 
@@ -425,12 +468,29 @@ begin
   // end;
 end;
 
+procedure TMForm.tmrAutTimer(Sender: TObject);
+begin
+  bAllAut := False;
+  if not Assigned(AutCamsThread) and (AppSett.slCams.Count > 0) then
+  begin
+    AutCamsThread := TAutCamsThread.Create(False);
+    AutCamsThread.Priority := tpNormal;
+  end;
+end;
+
 procedure TMForm.tmrCrtBrwsrTimer(Sender: TObject);
 begin
   tmrCrtBrwsr.Enabled := False;
   if not (chrmBrwsr.CreateBrowser(CEFWindowParent1, '')) and not (chrmBrwsr.Initialized)
     then
     tmrCrtBrwsr.Enabled := True;
+end;
+
+procedure TMForm.tmrDelThTimer(Sender: TObject);
+begin
+  if Assigned(AutCamsThread) then
+    FreeAndNil(AutCamsThread);
+  tmrDelTh.Enabled := False;
 end;
 
 procedure TMForm.tmrMailTimer(Sender: TObject);
@@ -461,6 +521,12 @@ begin
   AddToLog('Нажата клавиша = ' + IntToStr(TempKeyMsg.CharCode));
 end;
 
+procedure TMForm.chrmBrwsrAddressChange(Sender: TObject; const browser:
+  ICefBrowser; const frame: ICefFrame; const url: ustring);
+begin
+  edtAddress.Text := url;
+end;
+
 procedure TMForm.chrmBrwsrAfterCreated(Sender: TObject; const browser:
   ICefBrowser);
 begin
@@ -485,7 +551,7 @@ procedure TMForm.chrmBrwsrBeforeDownload(Sender: TObject; const browser:
   ICefBrowser; const downloadItem: ICefDownloadItem; const suggestedName:
   ustring; const callback: ICefBeforeDownloadCallback);
 var
-  TempMyDocuments, TempFullPath, TempName: string;
+  {TempMyDocuments,}   TempFullPath{, TempName}: string;
 begin
   if not (chrmBrwsr.IsSameBrowser(browser)) or (downloadItem = nil) or not (downloadItem.IsValid)
     then
@@ -635,12 +701,11 @@ begin
     actvtyndctr1.Visible := False;
   end;
 end;
-  // ------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 // Обработка ошибок работы браузера с сервером
 // Коды ошибок идут со знаком "-".
-
-  // ------------------------------------------------------------------------------
-
+//-----------------------------------------------------------------------------
 procedure TMForm.chrmBrwsrLoadError(Sender: TObject; const browser: ICefBrowser;
   const frame: ICefFrame; errorCode: Integer; const errorText, failedUrl:
   ustring);
@@ -671,10 +736,16 @@ begin
           ErrCount.Count2 := 0;
           DecodeDateTime(Now - dtCheck, myYear, myMonth, myDay, myHour, myMin,
             mySec, myMilli);
-          if (myMin > AppSett.iCamsCheckDelay) or not bCamsIsChecked then
+          if AppSett.slCams.Count > 0 then
           begin
-            CamsCheck;
-          end;
+            if (myMin > AppSett.iCamsCheckDelay) or not bCamsIsChecked then
+            begin
+              bError := True;
+              CamsCheck;
+            end;
+          end
+          else
+            bAllAut := True;
         end;
       -3:
         chrmBrwsr.LoadURL(AppSett.sDefLink);
@@ -685,10 +756,16 @@ begin
       ErrCount.Count118 := 0;
       DecodeDateTime(Now - dtCheck, myYear, myMonth, myDay, myHour, myMin,
         mySec, myMilli);
-      if (myMin > AppSett.iCamsCheckDelay) or not bCamsIsChecked then
+      if AppSett.slCams.Count > 0 then
       begin
-        CamsCheck;
-      end;
+        if (myMin > AppSett.iCamsCheckDelay) or not bCamsIsChecked then
+        begin
+          bError := True;
+          CamsCheck;
+        end;
+      end
+      else
+        bAllAut := True;
     end;
     if (ErrCount.Count2 = 2) or (ErrCount.Count118 = 2) then
     begin
@@ -725,7 +802,10 @@ begin
     ' Статус ' + IntToStr(chrmBrwsr.VisibleNavigationEntry.httpStatusCode));
   if (chrmBrwsr.VisibleNavigationEntry.httpStatusCode = 200) and (chrmBrwsr.browser.MainFrame.Url
     = AppSett.sDefLink) then
-    bCamsIsChecked := False
+  begin
+    bCamsIsChecked := False;
+    bError := False;
+  end
   else if chrmBrwsr.VisibleNavigationEntry.httpStatusCode = 503 then
   begin
     chrmBrwsr.LoadURL(ExtractFilePath(ParamStr(0)) + ERR_118 + '?url=' +
@@ -781,6 +861,8 @@ begin
       FreeAndNil(AutCamsThread);
     if Assigned(MailForm) then
       MailForm.Destroy;
+    if Assigned(TabF) then
+      TabF.Destroy;
   except
 
   end;
@@ -808,6 +890,7 @@ var
   ProcessID, ThreadID: Cardinal;
   EXEVersionData: TEXEVersionData;
 begin
+  bIsStartHP := False;
   bCamsIsChecked := False;
   AppSett.slCams := TStringList.Create;
   sAppName := ParamStr(0);
@@ -870,7 +953,8 @@ begin
   sRealDefLink := AppSett.sDefLink;
   if AppSett.slCams.Count > 0 then
   begin
-    AppSett.sDefLink := AppSett.slCams.Strings[0];
+    //AppSett.sDefLink := AppSett.slCams.Strings[0];
+    AppSett.sDefLink := ExtractFilePath(ParamStr(0)) + 'Respond\start.html';
     pnlCamResp.Top := Round(CEFWindowParent1.Height / 2 - pnlCamResp.Height / 2);
     pnlCamResp.Left := Round(CEFWindowParent1.Width / 2 - pnlCamResp.Width / 2);
     pnlCamResp.Visible := True;
@@ -884,9 +968,14 @@ begin
 
   if not Assigned(AutCamsThread) and (AppSett.slCams.Count > 0) then
   begin
+//    Application.CreateForm(TTabF, TabF);
+//    TabF.Show;
     AutCamsThread := TAutCamsThread.Create(False);
     AutCamsThread.Priority := tpNormal;
-  end;
+  end
+  else
+    if AppSett.slCams.Count = 0 then
+      bAllAut := True;
   ErrCount.Count2 := 0;
   ErrCount.Count118 := 0;
   tmrMail.Interval := AppSett.iMTimeOut;

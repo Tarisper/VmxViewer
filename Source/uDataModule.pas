@@ -125,8 +125,8 @@ begin
 end;
 
 procedure TDM.SetParams;
-var
-  slNames: TStringList;
+//var
+//  slNames: TStringList;
 
   procedure SetV(sName, sValue: string);
   begin
@@ -231,6 +231,9 @@ begin
         iPort := ReadInteger('Mail', 'iPort', 25);
         iMTimeOut := ReadInteger('Mail', 'iMTimeOut', 300000);
         iCamsCheckDelay := ReadInteger('Application', 'iCamsCheckDelay', 60);
+        {$IFDEF DEBUG}
+        iCamsCheckDelay := 2;
+        {$ENDIF}
         if Assigned(AppSett.slCams) then
         begin
           L := TIniStringList.Create;

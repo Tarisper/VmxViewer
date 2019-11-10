@@ -22,7 +22,9 @@ uses
   Vcl.Styles,
   IniFiles,
   uStrinListFiles in 'uStrinListFiles.pas',
-  uMail in 'uMail.pas' {MailForm};
+  uMail in 'uMail.pas' {MailForm},
+  uTabF in 'uTabF.pas' {TabF},
+  uTForm in 'uTForm.pas' {TabForm};
 
 {$R *.res}
 {$SETPEFLAGS IMAGE_FILE_LARGE_ADDRESS_AWARE}
@@ -30,7 +32,7 @@ uses
 var
   sIniPath_d: string;
   ini_d: TMemIniFile;
-  bLog_d: Boolean;
+//  bLog_d: Boolean;
 
 begin
   GlobalCEFApp := TCefApplication.Create;

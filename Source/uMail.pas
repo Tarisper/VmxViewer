@@ -121,17 +121,17 @@ begin
 end;
 
 function GetUserFromWindows: string;
- const
-   cnMaxUserNameLen = 254;
- var
-   sUserName: string;
-   dwUserNameLen: DWORD;
- begin
-   dwUserNameLen := cnMaxUserNameLen - 1;
-   SetLength(sUserName, cnMaxUserNameLen);
-   GetUserName(PChar(sUserName), dwUserNameLen);
-   SetLength(sUserName, dwUserNameLen);
-   Result := sUserName;
+const
+  cnMaxUserNameLen = 254;
+var
+  sUserName: string;
+  dwUserNameLen: DWORD;
+begin
+  dwUserNameLen := cnMaxUserNameLen - 1;
+  SetLength(sUserName, cnMaxUserNameLen);
+  GetUserName(PChar(sUserName), dwUserNameLen);
+  SetLength(sUserName, dwUserNameLen);
+  Result := sUserName;
 end;
 
 procedure TMailForm.Button2Click(Sender: TObject);
@@ -140,17 +140,18 @@ var
   s: string;
   sText: TStrings;
 begin
+  sText := TStringList.Create;
   try
-    sText := TStringList.Create;
     s := MForm.AppSett.sDefLink;
-    sText.Add('Ошибка доступа к серверу Чёрного экрана. Сервер "' + s
-      + '" недоступен у оператора.');
+    sText.Add('Ошибка доступа к серверу Чёрного экрана. Сервер "' + s +
+      '" недоступен у оператора.');
     sText.Add('IP: ' + Trim(IdIPWatch1.LocalIP));
     sText.Add('Имя компьютера: ' + Trim(GetComputerNetName));
     sText.Add('Имя пользователя: ' + Trim(GetUserFromWindows));
   except
-    sText.Add('Ошибка доступа к серверу Чёрного экрана. Сервер "' + s
-      + '" недоступен у оператора.');
+    if sText <> nil then
+      sText.Add('Ошибка доступа к серверу Чёрного экрана. Сервер "' + s +
+        '" недоступен у оператора.');
   end;
   if not IdSMTP1.Connected then
     Button1.Click;

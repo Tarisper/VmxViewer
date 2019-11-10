@@ -44,6 +44,7 @@ object MForm: TMForm
       AutoSize = True
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 819
       object tlb1: TToolBar
         Left = 0
         Top = 0
@@ -190,6 +191,7 @@ object MForm: TMForm
     OnBeforeContextMenu = chrmBrwsrBeforeContextMenu
     OnPreKeyEvent = chrmBrwsrPreKeyEvent
     OnKeyEvent = chrmBrwsrKeyEvent
+    OnAddressChange = chrmBrwsrAddressChange
     OnBeforeDownload = chrmBrwsrBeforeDownload
     OnDownloadUpdated = chrmBrwsrDownloadUpdated
     OnBeforePopup = chrmBrwsrBeforePopup
@@ -1593,5 +1595,18 @@ object MForm: TMForm
     OnTimer = tmrMailTimer
     Left = 24
     Top = 144
+  end
+  object tmrAut: TTimer
+    Enabled = False
+    OnTimer = tmrAutTimer
+    Left = 24
+    Top = 208
+  end
+  object tmrDelTh: TTimer
+    Enabled = False
+    Interval = 3000
+    OnTimer = tmrDelThTimer
+    Left = 24
+    Top = 280
   end
 end
