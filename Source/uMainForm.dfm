@@ -44,7 +44,6 @@ object MForm: TMForm
       AutoSize = True
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 819
       object tlb1: TToolBar
         Left = 0
         Top = 0

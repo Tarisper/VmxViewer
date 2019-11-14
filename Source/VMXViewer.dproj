@@ -136,14 +136,14 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=ООО &quot;ВидеоМатрикс&quot;;FileDescription=$(MSBuildProjectName);FileVersion=1.1.1.27;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName) $(Platform);ProductVersion=1.0.0.0;Comments=;LastCompiledTime=2019.11.10 17:29:40</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=ООО &quot;ВидеоМатрикс&quot;;FileDescription=$(MSBuildProjectName);FileVersion=1.1.1.31;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName) $(Platform);ProductVersion=1.0.0.0;Comments=;LastCompiledTime=2019.11.14 15:39:09</VerInfo_Keys>
         <DCC_ExeOutput>..\bin\$(Platform)</DCC_ExeOutput>
         <DCC_UnitSearchPath>..\addDependences\dcef3-master\src\;..\addDependences\CEF4Delphi-master\source\;..\addDependences\Synapse\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Icon_MainIcon>responsive.ico</Icon_MainIcon>
         <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_RunParams>https:\\google.com</Debugger_RunParams>
-        <VerInfo_Build>27</VerInfo_Build>
+        <VerInfo_Build>31</VerInfo_Build>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
     </PropertyGroup>
     <ItemGroup>

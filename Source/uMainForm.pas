@@ -816,6 +816,7 @@ begin
       myMilli);
     if (myMin > AppSett.iCamsCheckDelay) or not bCamsIsChecked then
     begin
+      bError := True;
       CamsCheck;
     end;
   end;
