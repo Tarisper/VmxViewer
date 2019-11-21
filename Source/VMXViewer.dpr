@@ -3,27 +3,27 @@ program VMXViewer;
 {$I cef.inc}
 
 uses
-  {$IFDEF DELPHI16_UP}
+{$IFDEF DELPHI16_UP}
   Vcl.Forms,
-  {$ELSE}
+{$ELSE}
   Forms,
   Windows,
-  {$ENDIF }
+{$ENDIF }
   Dialogs,
   WinAPI.Windows,
   System.SysUtils,
   uCEFApplication,
   uCEFTypes,
-  uMainForm in 'uMainForm.pas' {MForm},
-  uDataModule in 'uDataModule.pas' {DM: TDataModule},
-  uSplash in 'uSplash.pas' {SpForm},
-  uSetUnit in 'uSetUnit.pas' {SetForm},
+  uMainForm in 'uMainForm.pas' {MForm} ,
+  uDataModule in 'uDataModule.pas' {DM: TDataModule} ,
+  uSplash in 'uSplash.pas' {SpForm} ,
+  uSetUnit in 'uSetUnit.pas' {SetForm} ,
   Vcl.Themes,
   Vcl.Styles,
   IniFiles,
   uStrinListFiles in 'uStrinListFiles.pas',
-  uMail in 'uMail.pas' {MailForm},
-  uTabF in 'uTabF.pas' {TabF},
+  uMail in 'uMail.pas' {MailForm} ,
+  uTabF in 'uTabF.pas' {TabF} ,
   uTForm in 'uTForm.pas' {TabForm};
 
 {$R *.res}
@@ -32,16 +32,28 @@ uses
 var
   sIniPath_d: string;
   ini_d: TMemIniFile;
-//  bLog_d: Boolean;
+  // bLog_d: Boolean;
+
+function GetFullPath(shortName:string):string;
+var
+  fullpath: PWideChar;
+  buffer:string;
+  i:integer;
+  ch:char;
+begin
+  setlength(buffer,255);
+  GetFullPathName(@shortname[1],255,@Buffer[1],fullpath);
+  ch:=char(0);
+  i:=pos(ch,buffer);
+  setlength(buffer,i-1);
+  result:=buffer;
+end;
 
 begin
   GlobalCEFApp := TCefApplication.Create;
-  GlobalCEFApp.EnableGPU := True;
-  GlobalCEFApp.Cache := 'Cache\';
-  GlobalCEFApp.UserDataPath := 'UserData\';
   GlobalCEFApp.AutoplayPolicy := appNoUserGestureRequired;
   if not FileExists(ParamStr(3)) or (Pos('\', ParamStr(3)) = 0) then
-    sIniPath_d := ExtractFilePath(ParamStr(0)) + 'vmxbrowser.ini'
+    sIniPath_d := ExtractFilePath(ParamStr(0)) + 'vmxviewer.ini'
   else
     sIniPath_d := ParamStr(3);
   ini_d := TMemIniFile.Create(sIniPath_d);
@@ -49,14 +61,19 @@ begin
   begin
     if FileExists(sIniPath_d) then
     begin
-      if ini_d.ReadBool('Application', 'bLog', False) then
+      GlobalCEFApp.EnableGPU := ini_d.ReadBool('Application', 'bEnableGPU', True);
+      GlobalCEFApp.Cache := ini_d.ReadString('Application', 'sCacheDir',
+        'Cache\');
+      GlobalCEFApp.UserDataPath := ini_d.ReadString('Application',
+        'sUserDataDir', 'UserData\');
+      if ini_d.ReadBool('Application', 'bDLog', False) then
       begin
-        GlobalCEFApp.LogFile := ExtractFilePath(ParamStr(0)) +
-          'Logs\VmxViewer_Debug.log';
+        GlobalCEFApp.LogFile := GetFullPath(IncludeTrailingPathDelimiter(ini_d.ReadString('Application',
+          'sPathLog', 'Logs\'))) + 'VmxViewer_Debug.log';
         GlobalCEFApp.LogSeverity := ini_d.ReadInteger('Application',
-          'iMinLogLevel', 2);;
-        GlobalCEFApp.LogProcessInfo := True;
+          'iMinLogLevel', 2);
       end;
+      GlobalCEFApp.LogProcessInfo := ini_d.ReadBool('Application', 'bLogProcessInfo', False);
       ini_d.Free;
     end;
   end;
@@ -75,7 +92,7 @@ begin
     begin
       TStyleManager.TrySetStyle('Windows10 SlateGray');
       Application.CreateForm(TSpForm, SpForm);
-  SpForm.Show;
+      SpForm.Show;
       Application.ProcessMessages;
       Sleep(1500);
       SpForm.Destroy;
@@ -87,3 +104,4 @@ begin
   DestroyGlobalCEFApp;
 
 end.
+
