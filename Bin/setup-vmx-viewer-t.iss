@@ -14,7 +14,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{8E3665E9-0C2D-41B3-9095-7D9ECCEE00B7}
+AppId={{0DD9B607-2DB4-47D9-B4EF-A29DD52404DD}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -24,7 +24,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\VMX\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=setup-vmx-viewer_11217
+OutputBaseFilename=setup-vmx-viewer_11217_t
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=poweruser

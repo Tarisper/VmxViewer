@@ -40,6 +40,9 @@ implementation
 uses
   {synacode}uStrinListFiles;
 
+function Encrypt(const AStr, Key: string): string; stdcall; external 'CrEnDEC_64.dll';
+function Decrypt(const AStr, Key: string): string; stdcall; external 'CrEnDEC_64.dll';
+
 procedure TDM.SQLCon(sPath: string);
 begin
   MForm.AppSett.sDbPath := ExtractFileDir(ParamStr(0));
@@ -226,7 +229,7 @@ begin
         bSend := ReadBool('Mail', 'bSend', False);
         sFrom := ReadString('Mail', 'sFrom', 'a103-blackscreen1@vsk.sibur.ru');
         sTo := ReadString('Mail', 'sTo', '');
-        sPass := ReadString('Mail', 'sPass', '40uzKdgA');
+        sPass := Decrypt(ReadString('Mail', 'sPass', '40uzKdgA'), 'Vmx');
         sSMTP := ReadString('Mail', 'sSMTP', 'smtp.sibur.local');
         iPort := ReadInteger('Mail', 'iPort', 25);
         iMTimeOut := ReadInteger('Mail', 'iMTimeOut', 300000);
