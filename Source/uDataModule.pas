@@ -221,10 +221,17 @@ begin
         bShowCloseButton := ReadBool('Application', 'bShowCloseButton', True);
         bShowOptionButton := ReadBool('Application', 'bShowOptionButton', True);
         sPathLog := Trim(ReadString('Application', 'sPathLog', sPath));
+        if Copy(sPathLog, Length(sPathLog), 1) = '\' then
+          Delete(sPathLog, Length(sPathLog), 1);
         iRefreshUrl := ReadInteger('Application', 'iRefreshUrl', 1);
         iMinLogLevel := ReadInteger('Application', 'iMinLogLevel', 2);
         iTimeOut := ReadInteger('Application', 'iTimeOut', 3000);
         bMSWS12R2 := ReadBool('Application', 'bMSWS12R2', True);
+        iCamsCheckDelay := ReadInteger('Application', 'iCamsCheckDelay', 60);
+        {$IFDEF DEBUG}
+        iCamsCheckDelay := 2;
+        {$ENDIF}
+        bRedirect3 := ReadBool('Application', 'bRedirect3', False);
 
         bSend := ReadBool('Mail', 'bSend', False);
         sFrom := ReadString('Mail', 'sFrom', 'a103-blackscreen1@vsk.sibur.ru');
@@ -233,10 +240,7 @@ begin
         sSMTP := ReadString('Mail', 'sSMTP', 'smtp.sibur.local');
         iPort := ReadInteger('Mail', 'iPort', 25);
         iMTimeOut := ReadInteger('Mail', 'iMTimeOut', 300000);
-        iCamsCheckDelay := ReadInteger('Application', 'iCamsCheckDelay', 60);
-        {$IFDEF DEBUG}
-        iCamsCheckDelay := 2;
-        {$ENDIF}
+
         if Assigned(AppSett.slCams) then
         begin
           L := TIniStringList.Create;

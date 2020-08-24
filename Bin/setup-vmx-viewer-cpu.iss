@@ -14,7 +14,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{04A8290E-E77A-486D-B903-743AA82DA342}
+AppId={{DDA64AB5-D710-43FE-A790-373938CF8196}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -44,7 +44,7 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Files]
 Source: "d:\Work\Projects\Delphi\VmxViewer\Bin\Respondscpu\-118.html"; DestDir: "{app}\Respond\"; Flags: ignoreversion
-Source: "d:\Work\Projects\Delphi\VmxViewer\Bin\Inicpu\vmxbrowser.ini"; DestDir: "{app}\"; Flags: ignoreversion
+Source: "d:\Work\Projects\Delphi\VmxViewer\Bin\Inicpu\vmxviewer.ini"; DestDir: "{app}\"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "Splash.png"; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
 Source: "isgsg.dll"; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
@@ -54,6 +54,10 @@ Source: "isgsg.dll"; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
 Name: bMSWS12R2; Description: "Совместимость с MS Windows Server 2012"; Flags: unchecked
 Name: bLog; Description: "Вести запись логов программы"; Flags: unchecked
 Name: bDLog; Description: "Вести запись glog (может привести к увеличению нагрузки на ресурсы компьютера)"; Flags: unchecked
+
+[Icons]
+Name: "VMX\Vmx Viewer\Удаить настройки оператора"; Filename: "{uninstallexe}"; \
+  AfterInstall: AfterInstallProc('VMX\Vmx Viewer\Удаить настройки оператора.lnk')
 
 [Code]
 var 

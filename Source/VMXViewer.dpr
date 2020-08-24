@@ -94,7 +94,7 @@ begin
       Application.CreateForm(TSpForm, SpForm);
       SpForm.Show;
       Application.ProcessMessages;
-      Sleep(1500);
+      Sleep(1200);
       SpForm.Destroy;
       Application.CreateForm(TMForm, MForm);
       Application.CreateForm(TDM, DM);

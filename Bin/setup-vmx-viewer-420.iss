@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Vmx Viewer. Настройки камер пользователей"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.1"
 #define MyAppPublisher "ООО ВидеоМатрикс"
 #define MyAppURL "http://videomatrix.ru/"
 #define MyAppExeName "VMXViewer.exe"
@@ -43,8 +43,8 @@ Uninstallable=yes
 Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Files]
-Source: "d:\Work\Projects\Delphi\VmxViewer\Bin\Responds420\-118.html"; DestDir: "{app}\Respond\"; Flags: ignoreversion
-Source: "d:\Work\Projects\Delphi\VmxViewer\Bin\Ini420\vmxbrowser.ini"; DestDir: "{app}\"; Flags: ignoreversion
+Source: "f:\Drives\OneDrive\Work\VMX\Projects\Delphi\VmxViewer\Bin\Responds420\-118.html"; DestDir: "{app}\Respond\"; Flags: ignoreversion
+Source: "f:\Drives\OneDrive\Work\VMX\Projects\Delphi\VmxViewer\Bin\Ini420\vmxviewer.ini"; DestDir: "{app}\"; Flags: ignoreversion
 Source: "Splash.png"; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
 Source: "isgsg.dll"; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -53,6 +53,10 @@ Source: "isgsg.dll"; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
 Name: bMSWS12R2; Description: "Совместимость с MS Windows Server 2012"; Flags: unchecked
 Name: bLog; Description: "Вести запись логов программы"; Flags: unchecked
 Name: bDLog; Description: "Вести запись glog (может привести к увеличению нагрузки на ресурсы компьютера)"; Flags: unchecked
+
+[Icons]
+Name: "VMX\Vmx Viewer\Удаить настройки оператора"; Filename: "{uninstallexe}"; \
+  AfterInstall: AfterInstallProc('VMX\Vmx Viewer\Удаить настройки оператора.lnk')
 
 [Code]
 var 
@@ -100,19 +104,26 @@ begin
   TDV.Enabled := TChB.Checked; 
 end; 
  
+procedure SetIniA(Path: string);
+var
+  IniFileName: String;
+begin
+  IniFileName := ChangeFileExt(AddBackslash(AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}') + '{#MyAppExeName}', '.ini');
+  SetIniString('Application', 'sPathLog', Path + 'Logs\', IniFileName);
+  SetIniString('Application', 'sDefCookiesDir', Path + 'Cookies\', IniFileName);
+  SetIniString('Application', 'sCacheDir', Path + 'Cache\', IniFileName);
+  SetIniString('Application', 'sUserDataDir', Path + 'UserData\', IniFileName);
+end;
+
 procedure UpdateIni();
 var
   IniFileName: String;
 begin
-  //MsgBox('About to install MyProg.exe as.', mbInformation, MB_OK);
-  IniFileName := ChangeFileExt(AddBackslash(AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppNameVmxV}') + '{#MyAppExeName}', '.ini');
   if TChB.Checked then
-  begin
-    SetIniString('Application', 'sPathLog', GetDir() + 'Logs\', IniFileName);
-    SetIniString('Application', 'sDefCookiesDir', GetDir() + 'Cookies\', IniFileName);
-    SetIniString('Application', 'sCacheDir', GetDir() + 'Cache\', IniFileName);
-    SetIniString('Application', 'sUserDataDir', GetDir() + 'UserData\', IniFileName);
-  end;
+    SetIniA(AddBackslash(Edit.Text))
+  else
+    SetIniA(AddBackslash(Edit.Text));
+  IniFileName := ChangeFileExt(AddBackslash(AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}') + '{#MyAppExeName}', '.ini');
   if WizardForm.TasksList.Checked[0] then
     SetIniBool('Application', 'bMSWS12R2', True, IniFileName)
   else

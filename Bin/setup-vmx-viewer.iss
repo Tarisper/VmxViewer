@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "VMX Viewer"
-#define MyAppVersion "1.1.2.17"
+#define MyAppVersion "1.1.2.32"
 #define MyAppPublisher "ООО 'ВидеоМатрикс'"
 #define MyAppURL "http://videomatrix.ru/"
 #define MyAppExeName "VMXViewer.exe"
@@ -24,7 +24,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\VMX\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=setup-vmx-viewer_11217
+OutputBaseFilename=setup-vmx-viewer_11232
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=poweruser
@@ -57,7 +57,7 @@ Name: "{commonprograms}\EncodeString"; Filename: "{app}\EncodeString.exe";
 Name: "{commonprograms}\Удаить {#MyAppName}"; Filename: "{uninstallexe}"
 
 [Files]
-Source: "D:\Work\Projects\Delphi\VmxViewer\Bin\Win64\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
+Source: ".\Win64\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs
 Source: "Splash.png"; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
 Source: "isgsg.dll"; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -69,6 +69,8 @@ var
   TChB: TCheckBox;
   UserDataDir: string;
   ISCP: TWizardPage;
+  Edit: TNewEdit;
+  Button: TNewButton;
 
 procedure ShowSplashScreen(p1:HWND;p2:string;p3,p4,p5,p6,p7:integer;p8:boolean;p9:Cardinal;p10:integer); external 'ShowSplashScreen@files:isgsg.dll stdcall delayload';
 
@@ -105,22 +107,31 @@ end;
 
 procedure TChBOnClick(Sender: TObject); 
 begin 
-  TDV.Enabled := TChB.Checked; 
+  //TDV.Enabled := TChB.Checked;
+  Edit.Enabled := TChB.Checked;
+  Button.Enabled := TChB.Checked; 
 end; 
  
+procedure SetIniA(Path: string);
+var
+  IniFileName: String;
+begin
+  IniFileName := ChangeFileExt(AddBackslash(AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}') + '{#MyAppExeName}', '.ini');
+  SetIniString('Application', 'sPathLog', Path + 'Logs\', IniFileName);
+  SetIniString('Application', 'sDefCookiesDir', Path + 'Cookies\', IniFileName);
+  SetIniString('Application', 'sCacheDir', Path + 'Cache\', IniFileName);
+  SetIniString('Application', 'sUserDataDir', Path + 'UserData\', IniFileName);
+end;
+
 procedure UpdateIni();
 var
   IniFileName: String;
 begin
-  //MsgBox('About to install MyProg.exe as.', mbInformation, MB_OK);
-  IniFileName := ChangeFileExt(AddBackslash(AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}') + '{#MyAppExeName}', '.ini');
   if TChB.Checked then
-  begin
-    SetIniString('Application', 'sPathLog', GetDir() + 'Logs\', IniFileName);
-    SetIniString('Application', 'sDefCookiesDir', GetDir() + 'Cookies\', IniFileName);
-    SetIniString('Application', 'sCacheDir', GetDir() + 'Cache\', IniFileName);
-    SetIniString('Application', 'sUserDataDir', GetDir() + 'UserData\', IniFileName);
-  end;
+    SetIniA(AddBackslash(Edit.Text))
+  else
+    SetIniA(AddBackslash(Edit.Text));
+  IniFileName := ChangeFileExt(AddBackslash(AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}') + '{#MyAppExeName}', '.ini');
   if WizardForm.TasksList.Checked[0] then
     SetIniBool('Application', 'bMSWS12R2', True, IniFileName)
   else
@@ -195,6 +206,19 @@ begin
   end;
 end;
 
+procedure BtnOnClick(Sender: TObject);
+begin
+  UserDataDir := AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}';
+  BrowseForFolder('Выберите директорию для хранения файлов:', UserDataDir, True);
+  UserDataDir := AddBackslash(AddBackslash(UserDataDir) + '{#MyAppName}'); 
+  Edit.Text := UserDataDir;
+end;
+
+procedure EditChange(Sender: TObject);
+begin
+  UserDataDir := AddBackslash(AddBackslash(Edit.Text) + '{#MyAppName}'); 
+end;
+
 procedure InitializeWizard(); 
 var
   BitmapImage1 : TBitmapImage;
@@ -203,7 +227,7 @@ begin
   ExtractTemporaryFile('Splash.png');
   ShowSplashScreen(WizardForm.Handle,ExpandConstant('{tmp}\Splash.png'), 700, 1400, 700, 0, 255, True, $FFFFFF, 10);
 
-  ISCP := CreateCustomPage(wpWelcome, 'Выбор директории', 'Выберите директорию для хранения логов, кэша и файлов пользователя (по умолчанию это директория с программой).');
+  ISCP := CreateCustomPage(wpSelectComponents, 'Выбор директории', 'Выберите директорию для хранения логов, кэша и файлов пользователя (по умолчанию это директория с программой).');
 
   TLbl := TLabel.Create(WizardForm);
   TLbl.Top := 5;
@@ -218,12 +242,38 @@ begin
   TChB.Parent := ISCP.Surface; 
   TChB.OnClick := @TChBOnClick;
 
-  TDV := TFolderTreeView.Create(WizardForm); 
+  {TDV := TFolderTreeView.Create(WizardForm); 
   TDV.Top := TChB.Top + 28; 
-  TDV.Width := 485; 
-  TDV.Height := 203; 
+  //TDV.Width := WizardForm.Width - 100; 
+  //TDV.Height := WizardForm.Height - 200;
+  TDV.Align := alClient;}
+
+  Edit := TNewEdit.Create(WizardForm);
+  with Edit do
+  begin
+    Parent := ISCP.Surface;
+    SetBounds(ScaleX(8), ScaleY(TChB.Top + 28), ScaleX(313), ScaleY(21));
+    Text := AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}';
+    OnChange := @EditChange;
+    Enabled := TChB.Checked;
+  end;
+
+  Button := TNewButton.Create(WizardForm);
+  with Button do
+  begin
+    Parent := ISCP.Surface;
+    SetBounds(ScaleX(328), ScaleY(TChB.Top + 28), ScaleX(80), ScaleY(23));
+    Caption := WizardForm.DirBrowseButton.Caption;
+    OnClick := @BtnOnClick;
+    Enabled := TChB.Checked;
+
+//    WizardForm.DirEdit.Text := AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}';
+//    WizardForm.DirEdit.OnChange := @EditChange;
+  end;
+
+{  MsgBox(IntToStr(TDV.Width) + ' ' + IntToStr(TDV.Height), mbInformation, MB_OK); 
   TDV.OnChange := @TDVOnChange; 
   TDV.Parent := ISCP.Surface;
-  TDV.Directory := AddBackslash(AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}');
-  TDV.Enabled := TChB.Checked;
+//  TDV.Directory := AddBackslash(AddBackslash(ExpandConstant('{#AppDirectory}')) + 'VMX\' + '{#MyAppName}');
+  TDV.Enabled := TChB.Checked;}
 end;
